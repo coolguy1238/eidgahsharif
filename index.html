@@ -455,6 +455,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   <div class="q-attr reveal" id="quote-attr-el" style="transition-delay:.15s">— Ḥazrat Ḥāfiz Muḥammad Naqīb al-Raḥmān · Ḥazrat Sāhib · Eidgah Sharif</div>
   <div style="margin-top:18px;display:none" id="quote-edit-row">
     <button class="btn-sm" onclick="openEditPanel('quote')">Edit Featured Quote</button>
+    <button class="btn-sm" onclick="openEditPanel('audio')" style="margin-left:8px">🎵 Replace Audio</button>
   </div>
 </div>
 
@@ -1360,6 +1361,21 @@ function openEditPanel(type, idx) {
     <button class="pub-btn" onclick="saveBook()">Upload ✦</button><div class="ok" id="ep-ok">Uploaded ✦</div>`;
 
   }
+  if (type === 'audio') {
+    document.getElementById('edit-panel-content').innerHTML = `
+      <h2>Replace Audio</h2>
+      <p class="hint" style="margin-bottom:16px">Upload an MP3 to replace the player audio. Large files (50MB+) are supported.</p>
+      <div class="fg">
+        <label>Audio File (MP3)
+          <input type="file" accept="audio/*" id="audio-file-input" onchange="handleAudioUpload(this)">
+        </label>
+      </div>
+      <div id="audio-upload-status" style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--gold);margin-top:12px;display:none"></div>
+      <div class="ok" id="ep-ok">Saved ✦</div>
+    `;
+    document.getElementById('edit-overlay').classList.add('open');
+    return;
+  }
   document.getElementById('edit-overlay').classList.add('open');
 }
 
@@ -1494,13 +1510,35 @@ function closeLightbox(){document.getElementById('lightbox').classList.remove('o
 function closeOverlay(id){document.getElementById(id).classList.remove('open');}
 function closeOverlayOut(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 
+async function handleAudioUpload(input) {
+  const f = input.files[0];
+  if (!f) return;
+  const status = document.getElementById('audio-upload-status');
+  status.style.display = 'block';
+  status.textContent = 'Uploading — please wait, this may take a minute for large files…';
+  input.disabled = true;
+  try {
+    const url = await uploadFileToStorage(f);
+    // Save URL to DB
+    await dbSet('audioSrc', { url, name: f.name });
+    // Update live player
+    audioEl.src = url;
+    audioEl.load();
+    status.textContent = 'Uploaded successfully ✓';
+    setTimeout(() => { showOk(); }, 600);
+  } catch(err) {
+    status.textContent = 'Upload failed: ' + err.message;
+    input.disabled = false;
+  }
+}
+
 function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderBooks();renderComments();}
 
 // ── LOAD FROM SUPABASE ON START ──
 async function loadFromDB() {
-  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments] = await Promise.all([
+  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments, savedAudio] = await Promise.all([
     dbGet('quote'), dbGet('shayukh'), dbGet('gallery'),
-    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments')
+    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments'), dbGet('audioSrc')
   ]);
   if (quote) {
     document.getElementById('quote-text-el').textContent = quote.text;
@@ -1512,6 +1550,10 @@ async function loadFromDB() {
   if (savedBlog) blogPosts = savedBlog;
   if (savedBooks) books = savedBooks;
   if (savedComments) comments = savedComments;
+  if (savedAudio && savedAudio.url) {
+    audioEl.src = savedAudio.url;
+    audioEl.load();
+  }
   renderAll();
   setTimeout(onScroll, 100);
 }
