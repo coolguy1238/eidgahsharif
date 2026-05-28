@@ -1406,12 +1406,11 @@ async function unbanUser(name) {
 function renderBanList() {
   const el = document.getElementById('ban-list');
   if (!el) return;
-  if (!bannedNames.length) { el.innerHTML='<p style="font-family:'Amiri',serif;font-size:14px;color:var(--muted);font-style:italic;padding:12px 0">No banned users.</p>'; return; }
-  el.innerHTML = bannedNames.map(b=>`
-    <div class="ban-list-item">
-      <div><div class="ban-list-name">${b.name}</div><div class="ban-list-meta">Banned ${b.bannedAt}</div></div>
-      <button class="unban-btn" onclick="unbanUser('${b.name.replace(/'/g,"\'")}')">✓ Unban</button>
-    </div>`).join('');
+  if (!bannedNames.length) { el.innerHTML = '<p style="font-family:Amiri,serif;font-size:14px;color:var(--muted);font-style:italic;padding:12px 0">No banned users.</p>'; return; }
+  el.innerHTML = bannedNames.map(b=>{
+    const safeName = b.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return '<div class="ban-list-item"><div><div class="ban-list-name">'+b.name+'</div><div class="ban-list-meta">Banned '+b.bannedAt+'</div></div><button class="unban-btn" onclick="unbanUser(\''+safeName+'\')">✓ Unban</button></div>';
+  }).join('');
 }
 
 function checkBanOnPost(name) {
@@ -1565,9 +1564,8 @@ async function loadFromDB() {
   setTimeout(onScroll, 100);
 }
 loadFromDB();
-</script>
-</body>
-</html>function openEditPanel(type, idx) {
+
+function openEditPanel(type, idx) {
   pendingFiles = [];
   const c = document.getElementById('edit-panel-content');
   const fileUploadHtml = `
@@ -2060,5 +2058,6 @@ loadFromDB();
 </script>
 </body>
 </html>
-
-
+</script>
+</body>
+</html>
