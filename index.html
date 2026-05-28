@@ -726,6 +726,29 @@ async function dbSet(key, value) {
   } catch(e) {}
 }
 
+// ── SUPABASE STORAGE ──
+const STORAGE_BUCKET = 'books';
+
+async function uploadFileToStorage(file) {
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const path = Date.now() + '_' + safeName;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${path}`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error('Storage upload failed: ' + err);
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+}
+
 // ── DATA ──
 const defaultShayukhData = [
   {num:35,known:"Bawaj\u012B S\u0101hib \u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F",ar:"\u062D\u0636\u0631\u062A \u062E\u0648\u0627\u062C\u06C1 \u062D\u0627\u0641\u0638 \u0639\u0628\u062F\u0627\u0644\u06A9\u0631\u06CC\u0645",en:"\u1E24azrat Khw\u0101j\u0101 \u1E24\u0101fiz Mu\u1E25ammad \u02BFAbd al-Kar\u012Bm",radi:"\u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F \u00B7 Born: 11 April 1848 \u00B7 Passed: 20 May 1936",bio:"Founder of Darbar-e-Aaliyah Eidgah Sharif, Rawalpindi. Took bay\u02BFah from B\u0101b\u0101 Faq\u012Br Mu\u1E25ammad al-Ch\u016Br\u0101h\u012B (\u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F) and received Khil\u0101fat in the Naqshband\u012B silsila. A \u1E24\u0101fiz of the Holy Qur\u2019an whose recitation drew Muslims and non-Muslims alike into stillness.",photo:"",files:[],current:false},
@@ -792,27 +815,41 @@ let galleryItems = [
 ];
 
 // ── FILE ATTACHMENT HELPERS ──
-// We store file attachments as {name, dataURL, type} objects in memory
-let pendingFiles = []; // files being attached in current edit panel
+// Files are uploaded to Supabase Storage; only the public URL is saved
+let pendingFiles = []; // {name, url, type, uploading}
 
-function addPendingFiles(input) {
+async function addPendingFiles(input) {
   const files = Array.from(input.files);
-  files.forEach(f => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      pendingFiles.push({name:f.name, dataURL:e.target.result, type:f.type});
-      renderPendingFiles();
-    };
-    reader.readAsDataURL(f);
-  });
+  if (!files.length) return;
   input.value = '';
+  const label = input.closest('label');
+  if (label) { label.style.opacity = '0.5'; label.title = 'Uploading…'; }
+
+  for (const f of files) {
+    const placeholderIdx = pendingFiles.length;
+    pendingFiles.push({name: f.name, url: null, type: f.type, uploading: true});
+    renderPendingFiles();
+    try {
+      const url = await uploadFileToStorage(f);
+      pendingFiles[placeholderIdx] = {name: f.name, url, type: f.type, uploading: false};
+    } catch(err) {
+      console.error(err);
+      alert('Upload failed for "' + f.name + '": ' + err.message + '\n\nMake sure your Supabase "books" bucket exists and is set to Public.');
+      pendingFiles.splice(placeholderIdx, 1);
+    }
+    renderPendingFiles();
+  }
+  if (label) { label.style.opacity = ''; label.title = ''; }
 }
 
 function renderPendingFiles() {
   const el = document.getElementById('pending-files-list');
   if (!el) return;
   el.innerHTML = pendingFiles.map((f,i) => `
-    <span class="att-tag">${fileIcon(f.type)} ${f.name} <button onclick="removePendingFile(${i})">×</button></span>
+    <span class="att-tag" style="${f.uploading ? 'opacity:0.5' : ''}">
+      ${f.uploading ? '⏳' : fileIcon(f.type)} ${f.name}
+      ${f.uploading ? '<span style="font-size:10px">uploading…</span>' : '<button onclick="removePendingFile('+i+')">\u00d7</button>'}
+    </span>
   `).join('');
 }
 
@@ -831,7 +868,7 @@ function fileIcon(type) {
 function renderFileTags(files) {
   if (!files || !files.length) return '';
   return '<div class="ci-files">' + files.map(f =>
-    `<a class="ci-file-link" href="${f.dataURL}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`
+    `<a class="ci-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`
   ).join('') + '</div>';
 }
 
@@ -1011,7 +1048,7 @@ function renderGallery() {
   const grid = document.getElementById('gallery-grid');
   grid.innerHTML = galleryItems.map(g => {
     const fileTags = (g.files && g.files.length) ? '<div style="position:absolute;bottom:60px;left:14px;display:flex;flex-wrap:wrap;gap:4px">' +
-      g.files.map(f=>`<a class="p-file-link" href="${f.dataURL}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : '';
+      g.files.map(f=>`<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : '';
     if (g.placeholder) {
       return `<div class="gallery-frame placeholder${adminMode?' admin-view':''}" ${adminMode?`onclick="openEditPanel('gallery-img','${g.id}')"`:''}>
         <div class="pl-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -1040,7 +1077,7 @@ function renderPosts() {
     <div class="p-tag">${p.cat}</div>
     <div class="p-title">${p.title}</div>
     <div class="p-body">${p.body}</div>
-    ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.dataURL}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
+    ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
     <div class="p-meta"><span>${p.attr}</span><span>${p.date}</span></div>
   </div>`).join('');
   onScroll();
@@ -1058,7 +1095,7 @@ function renderBlog() {
     ${p.cat ? `<div class="p-tag">${p.cat}</div>` : ''}
     <div class="p-title">${p.title}</div>
     <div class="p-body">${p.body}</div>
-    ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.dataURL}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
+    ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
     <div class="p-meta"><span>${p.author||''}</span><span>${p.date}</span></div>
   </div>`).join('');
   onScroll();
@@ -1077,7 +1114,7 @@ function renderBooks() {
     <div class="p-title">${b.title}</div>
     ${b.author ? `<div class="p-body" style="margin-bottom:10px">${b.author}</div>` : ''}
     ${b.desc ? `<div class="p-body">${b.desc}</div>` : ''}
-    ${b.file ? `<div class="p-files" style="margin-top:12px"><a class="p-file-link" href="${b.file.dataURL}" download="${b.file.name}" target="_blank">📄 ${b.file.name}</a></div>` : ''}
+    ${b.file ? `<div class="p-files" style="margin-top:12px"><a class="p-file-link" href="${b.file.url}" download="${b.file.name}" target="_blank">📄 ${b.file.name}</a></div>` : ''}
     <div class="p-meta"><span>${b.date}</span></div>
   </div>`).join('');
   onScroll();
@@ -1266,33 +1303,42 @@ function openEditPanel(type, idx) {
   document.getElementById('edit-overlay').classList.add('open');
 }
 
-function attachShaykhPhoto(input, idx) {
+async function attachShaykhPhoto(input, idx) {
   const f = input.files[0];
   if (!f) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    shayukhData[idx].photo = e.target.result;
+  const label = input.closest('label');
+  if (label) { label.style.opacity = '0.5'; label.title = 'Uploading…'; }
+  try {
+    const url = await uploadFileToStorage(f);
+    shayukhData[idx].photo = url;
     renderShayukh();
-    // update preview in panel
     const panel = document.getElementById('edit-panel-content');
     let img = panel.querySelector('img');
     if (!img) { img = document.createElement('img'); img.style='max-width:120px;margin-top:8px;border:1px solid rgba(201,168,76,0.2)'; panel.querySelector('.fg').appendChild(img); }
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(f);
+    img.src = url;
+  } catch(err) {
+    alert('Photo upload failed: ' + err.message);
+  } finally {
+    if (label) { label.style.opacity = ''; label.title = ''; }
+  }
 }
 
-function previewGalleryUpload(input) {
+async function previewGalleryUpload(input) {
   const f = input.files[0];
   if (!f) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById('ep-gsrc').value = e.target.result;
+  const label = input.closest('label');
+  if (label) { label.style.opacity = '0.5'; label.title = 'Uploading…'; }
+  try {
+    const url = await uploadFileToStorage(f);
+    document.getElementById('ep-gsrc').value = url;
     const prev = document.getElementById('ep-gpreview');
-    prev.src = e.target.result;
+    prev.src = url;
     prev.style.display = 'block';
-  };
-  reader.readAsDataURL(f);
+  } catch(err) {
+    alert('Photo upload failed: ' + err.message);
+  } finally {
+    if (label) { label.style.opacity = ''; label.title = ''; }
+  }
 }
 
 // ── SAVE FUNCTIONS ──
@@ -1310,6 +1356,7 @@ async function saveQuote(){
 async function savePost(){
   const t=document.getElementById('ep-title').value.trim(), b=document.getElementById('ep-body').value.trim();
   if(!t||!b) return;
+  if(pendingFiles.some(f=>f.uploading)){ alert('Please wait — files are still uploading.'); return; }
   posts.unshift({cat:document.getElementById('ep-cat').value,title:t,body:b,attr:document.getElementById('ep-attr').value,files:[...pendingFiles],date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
   await dbSet('posts',posts);
   renderPosts(); showOk();
@@ -1372,13 +1419,11 @@ async function deleteComment(i){if(confirm('Delete?')){comments.splice(i,1);awai
 
 async function saveBook(){
   const title=document.getElementById('ep-btitle').value.trim();
-  if(!title) return;
-  const fileInput=document.getElementById('ep-bfile');
-  const author=document.getElementById('ep-bauthor').value.trim();
-  const desc=document.getElementById('ep-bdesc').value.trim();
-  if(pendingFiles.length===0&&!fileInput.dataset.loaded){return;}
+  if(!title) { alert('Please enter a book title.'); return; }
+  if(pendingFiles.length===0){ alert('Please choose a PDF or document file to upload.'); return; }
+  if(pendingFiles.some(f=>f.uploading)){ alert('Please wait — file is still uploading.'); return; }
   const file=pendingFiles[0]||null;
-  books.unshift({title,author,desc,file,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
+  books.unshift({title,author:document.getElementById('ep-bauthor').value.trim(),desc:document.getElementById('ep-bdesc').value.trim(),file,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
   await dbSet('books',books);
   renderBooks(); showOk();
 }
