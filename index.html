@@ -371,9 +371,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   <div class="nav-logo">دربارِ عالیہ ایدگاہ شریف</div>
   <div class="nav-links">
     <a href="#" onclick="showPage('home');return false;" class="active" data-page="home">Home</a>
-    <a href="#" onclick="showPage('shayukh');return false;" data-page="shayukh">Shayukh</a>
     <a href="#" onclick="showPage('shajra');return false;" data-page="shajra">Shajra</a>
-    <a href="#" onclick="showPage('gallery');return false;" data-page="gallery">Gallery</a>
     <a href="#" onclick="showPage('writings');return false;" data-page="writings">Writings</a>
     <a href="#" onclick="showPage('blog');return false;" data-page="blog">Blog</a>
     <a href="#" onclick="showPage('community');return false;" data-page="community">Community</a>
@@ -393,9 +391,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
     <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" fill="none" stroke="#c9a84c" stroke-width="0.4"/>
   </svg>
   <a href="#" onclick="showPage('home');closeDrawer();return false;" data-page="home">Home</a>
-  <a href="#" onclick="showPage('shayukh');closeDrawer();return false;" data-page="shayukh">Shayukh</a>
   <a href="#" onclick="showPage('shajra');closeDrawer();return false;" data-page="shajra">Shajra</a>
-  <a href="#" onclick="showPage('gallery');closeDrawer();return false;" data-page="gallery">Gallery</a>
   <a href="#" onclick="showPage('writings');closeDrawer();return false;" data-page="writings">Writings</a>
   <a href="#" onclick="showPage('blog');closeDrawer();return false;" data-page="blog">Blog</a>
   <a href="#" onclick="showPage('community');closeDrawer();return false;" data-page="community">Community</a>
@@ -463,7 +459,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 
 <hr class="divider">
 
-<!-- Home intro links to sections -->
+<!-- Home intro -->
 <div class="section">
   <span class="sec-label reveal">Welcome</span>
   <div class="sec-title reveal">Darbar-e-Aaliyah Eidgah Sharif</div>
@@ -472,10 +468,33 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
     A blessed sanctuary of the Naqshbandī path in Rawalpindi, founded in 1848 by Ḥazrat Bawajī Sāhib رَضِيَ اللهُ عَنْهُ. Explore the lineage, the chain of transmission, and the writings of the Shayukh.
   </p>
   <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center" class="reveal">
-    <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('shayukh')">The Shayukh ✦</button>
     <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('shajra')">Shajra-e-Mubārak ✦</button>
     <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('writings')">Writings ✦</button>
     <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('blog')">Blog ✦</button>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- Shayukh section embedded on home page -->
+<div class="section" id="home-shayukh">
+  <span class="sec-label reveal">The Custodians of the Darbar</span>
+  <div class="sec-title reveal">Shayukh of Eidgah Sharif</div>
+  <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
+  <div class="chain" id="shayukh-chain"></div>
+</div>
+
+<hr class="divider">
+
+<!-- Gallery section embedded on home page -->
+<div class="section" id="home-gallery">
+  <span class="sec-label reveal">The Blessed Faces</span>
+  <div class="sec-title reveal">Gallery of the Shayukh</div>
+  <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
+  <p class="gallery-intro reveal">These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.</p>
+  <div class="gallery-grid reveal-scale" id="gallery-grid"></div>
+  <div style="margin-top:28px;text-align:center;display:none" id="gallery-add-row">
+    <button class="btn-sm" onclick="openEditPanel('gallery')">+ Add Photo / File</button>
   </div>
 </div>
 
@@ -488,22 +507,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 </footer>
 </div><!-- /page-home -->
 
-<!-- ══════════════════════════════════════
-     PAGE: SHAYUKH
-═══════════════════════════════════════ -->
-<div id="page-shayukh" class="page">
-<div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">The Custodians of the Darbar</span>
-  <div class="sec-title reveal">Shayukh of Eidgah Sharif</div>
-  <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <div class="chain" id="shayukh-chain"></div>
-</div>
-<footer>
-  <div class="orn" style="margin-bottom:20px"><div class="orn-line long"></div><div class="orn-d"></div><div class="orn-line long"></div></div>
-  <div class="f-logo">دربارِ عالیہ ایدگاہ شریف</div><div class="f-rule"></div>
-  <div class="f-text">Darbar-e-Aaliyah Eidgah Sharif · Rawalpindi</div>
-</footer>
-</div>
+
 
 <!-- ══════════════════════════════════════
      PAGE: SHAJRA
@@ -536,26 +540,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 </footer>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE: GALLERY
-═══════════════════════════════════════ -->
-<div id="page-gallery" class="page">
-<div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">The Blessed Faces</span>
-  <div class="sec-title reveal">Gallery of the Shayukh</div>
-  <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <p class="gallery-intro reveal">These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.</p>
-  <div class="gallery-grid reveal-scale" id="gallery-grid"></div>
-  <div style="margin-top:28px;text-align:center;display:none" id="gallery-add-row">
-    <button class="btn-sm" onclick="openEditPanel('gallery')">+ Add Photo / File</button>
-  </div>
-</div>
-<footer>
-  <div class="orn" style="margin-bottom:20px"><div class="orn-line long"></div><div class="orn-d"></div><div class="orn-line long"></div></div>
-  <div class="f-logo">دربارِ عالیہ ایدگاہ شریف</div><div class="f-rule"></div>
-  <div class="f-text">Darbar-e-Aaliyah Eidgah Sharif · Rawalpindi</div>
-</footer>
-</div>
+
 
 <!-- ══════════════════════════════════════
      PAGE: WRITINGS
@@ -902,10 +887,8 @@ let audioExpanded = false;
 
 function toggleAudio() {
   if (!audioExpanded) {
-    // First tap: expand player
     audioExpanded = true;
     playerEl.classList.add('expanded');
-    return;
   }
   if (!audioPlaying) {
     audioEl.play().then(() => {
