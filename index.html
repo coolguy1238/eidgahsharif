@@ -1290,14 +1290,27 @@ function toggleReplyForm(i) {
 }
 
 async function submitReply(i) {
-  const name = document.getElementById('rf-name-'+i).value.trim();
-  const loc  = document.getElementById('rf-loc-'+i).value.trim();
-  const text = document.getElementById('rf-msg-'+i).value.trim();
-  if (!name || !text) return;
-  if (!comments[i].replies) comments[i].replies = [];
-  comments[i].replies.push({name, loc, text, initials: name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
-  await dbSet('comments', comments);
-  renderComments();
+  const nameEl = document.getElementById('rf-name-'+i);
+  const locEl  = document.getElementById('rf-loc-'+i);
+  const msgEl  = document.getElementById('rf-msg-'+i);
+  if (!nameEl || !msgEl) return;
+  const name = nameEl.value.trim();
+  const loc  = locEl ? locEl.value.trim() : '';
+  const text = msgEl.value.trim();
+  if (!name) { nameEl.style.borderColor='rgba(224,112,112,0.6)'; nameEl.focus(); return; }
+  if (!text) { msgEl.style.borderColor='rgba(224,112,112,0.6)'; msgEl.focus(); return; }
+  nameEl.style.borderColor=''; msgEl.style.borderColor='';
+  const btn = nameEl.closest('.reply-form').querySelector('.sub-btn');
+  if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
+  try {
+    if (!Array.isArray(comments[i].replies)) comments[i].replies = [];
+    comments[i].replies.push({name, loc, text, initials: name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
+    await dbSet('comments', comments);
+    renderComments();
+  } catch(e) {
+    console.error('Reply save error:', e);
+    if (btn) { btn.textContent = 'Post Reply'; btn.disabled = false; }
+  }
 }
 
 async function deleteReply(i, j) {
