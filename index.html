@@ -133,9 +133,10 @@ body.cursor-hover #cursor-ring{width:52px;height:52px;border-color:var(--gold)}
 .audio-progress-wrap{display:flex;align-items:center;gap:6px}
 .audio-progress{
   flex:1;height:2px;background:rgba(201,168,76,0.15);border-radius:2px;
-  cursor:pointer;position:relative;
+  cursor:pointer;position:relative;touch-action:none;
+  padding:10px 0;margin:-10px 0;box-sizing:content-box;
 }
-.audio-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldl));border-radius:2px;width:0%;transition:width .5s linear;pointer-events:none;}
+.audio-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldl));border-radius:2px;width:0%;transition:width .3s linear;pointer-events:none;}
 .audio-time{font-family:'Cinzel',serif;font-size:7px;color:rgba(201,168,76,0.45);letter-spacing:1px;white-space:nowrap}
 .audio-expand-btn{
   position:absolute;right:-2px;top:50%;transform:translateY(-50%);
@@ -966,17 +967,18 @@ const progressFill = document.getElementById('audio-progress-fill');
 const audioTimeEl = document.getElementById('audio-time');
 let audioPlaying = false;
 let audioExpanded = false;
+let audioSeeking = false;
 
 function toggleAudio() {
   if (!audioExpanded) {
     audioExpanded = true;
     playerEl.classList.add('expanded');
+    // Small delay so expansion animates before play attempt
+    setTimeout(() => attemptPlay(), 150);
+    return;
   }
   if (!audioPlaying) {
-    audioEl.play().then(() => {
-      audioPlaying = true;
-      playerEl.classList.remove('paused');
-    }).catch(()=>{});
+    attemptPlay();
   } else {
     audioEl.pause();
     audioPlaying = false;
@@ -984,13 +986,27 @@ function toggleAudio() {
   }
 }
 
-// Clicking the expanded control area toggles play (not just the button)
+function attemptPlay() {
+  const promise = audioEl.play();
+  if (promise !== undefined) {
+    promise.then(() => {
+      audioPlaying = true;
+      playerEl.classList.remove('paused');
+    }).catch(err => {
+      console.warn('Audio play failed:', err);
+      audioPlaying = false;
+      playerEl.classList.add('paused');
+    });
+  }
+}
+
+// Clicking the expanded control area toggles play (not seek bar)
 document.getElementById('audio-controls').addEventListener('click', e => {
   if (!e.target.closest('#audio-progress')) toggleAudio();
 });
 
 audioEl.addEventListener('timeupdate', () => {
-  if (!audioEl.duration) return;
+  if (!audioEl.duration || audioSeeking) return;
   const pct = (audioEl.currentTime / audioEl.duration) * 100;
   progressFill.style.width = pct + '%';
   audioTimeEl.textContent = fmtTime(audioEl.currentTime) + ' / ' + fmtTime(audioEl.duration);
@@ -999,15 +1015,59 @@ audioEl.addEventListener('timeupdate', () => {
 audioEl.addEventListener('ended', () => {
   audioPlaying = false;
   playerEl.classList.add('paused');
+  progressFill.style.width = '0%';
 });
+
+audioEl.addEventListener('error', (e) => {
+  console.warn('Audio error:', e);
+  audioPlaying = false;
+  playerEl.classList.add('paused');
+});
+
+// ── SEEK: works on both mouse and touch ──
+function getSeekPct(e, bar) {
+  const rect = bar.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+}
 
 function seekAudio(e) {
   if (!audioEl.duration) return;
   const bar = document.getElementById('audio-progress');
-  const rect = bar.getBoundingClientRect();
-  const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  const pct = getSeekPct(e, bar);
   audioEl.currentTime = pct * audioEl.duration;
+  progressFill.style.width = (pct * 100) + '%';
+  audioTimeEl.textContent = fmtTime(audioEl.currentTime) + ' / ' + fmtTime(audioEl.duration);
 }
+
+// Full drag-to-seek support (mouse + touch)
+(function() {
+  const bar = document.getElementById('audio-progress');
+
+  function onSeekStart(e) {
+    if (!audioEl.duration) return;
+    audioSeeking = true;
+    e.stopPropagation();
+    seekAudio(e);
+  }
+  function onSeekMove(e) {
+    if (!audioSeeking) return;
+    e.preventDefault();
+    seekAudio(e);
+  }
+  function onSeekEnd(e) {
+    if (!audioSeeking) return;
+    audioSeeking = false;
+    seekAudio(e.changedTouches ? {clientX: e.changedTouches[0].clientX} : e);
+  }
+
+  bar.addEventListener('mousedown', onSeekStart);
+  bar.addEventListener('touchstart', onSeekStart, {passive: false});
+  document.addEventListener('mousemove', onSeekMove);
+  document.addEventListener('touchmove', onSeekMove, {passive: false});
+  document.addEventListener('mouseup', onSeekEnd);
+  document.addEventListener('touchend', onSeekEnd);
+})();
 
 function fmtTime(s) {
   if (!s || isNaN(s)) return '0:00';
