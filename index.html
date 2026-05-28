@@ -1115,21 +1115,24 @@ function fmtTime(s) {
 // ── RENDER FUNCTIONS ──
 function renderShayukh() {
   const c = document.getElementById('shayukh-chain');
-  c.innerHTML = shayukhData.map((s,i) => `
-  <div class="chain-item${s.current?' current':''} reveal" style="transition-delay:${i*0.08}s">
+  c.innerHTML = shayukhData.map((s,i) => {
+    const isCurrent = s.current || s.num === 38 || s.num === 39;
+    return `
+  <div class="chain-item${isCurrent?' current':''} reveal" style="transition-delay:${i*0.08}s">
     <div class="ci-num">${s.num}</div>
     <div class="ci-vc"><div class="ci-dot"></div>${i<shayukhData.length-1?'<div class="ci-line"></div>':''}</div>
     <div class="ci-body">
       <div class="ci-known">${s.known}</div>
-      <div class="ci-ar"${s.current?' style="font-size:24px;color:var(--goldl)"':''}>${s.ar}</div>
-      <div class="ci-en"${s.current?' style="color:rgba(245,230,184,0.7)"':''}>${s.en}</div>
+      <div class="ci-ar"${isCurrent?' style="font-size:24px;color:var(--goldl)"':''}>${s.ar}</div>
+      <div class="ci-en"${isCurrent?' style="color:rgba(245,230,184,0.7)"':''}>${s.en}</div>
       <div class="ci-radi">${s.radi}</div>
       ${s.bio?`<div class="ci-bio">${s.bio}</div>`:''}
       ${s.photo?`<div class="ci-photo"><img src="${s.photo}" alt="${s.known}"></div>`:''}
       ${renderFileTags(s.files)}
       ${adminMode?`<div style="margin-top:10px"><button class="edit-btn" onclick="openEditPanel('shaykh',${i})">Edit</button></div>`:''}
     </div>
-  </div>`).join('');
+  </div>`;
+  }).join('');
   onScroll();
 }
 
