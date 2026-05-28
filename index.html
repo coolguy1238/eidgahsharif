@@ -246,9 +246,25 @@ body.cursor-hover #cursor-ring{width:52px;height:52px;border-color:var(--gold)}
 .p-title{font-family:'Amiri',serif;font-size:20px;color:var(--cream);line-height:1.45;margin-bottom:10px}
 .p-body{font-family:'Amiri',serif;font-size:14px;color:rgba(250,246,236,0.45);line-height:1.7;font-style:italic}
 .p-meta{margin-top:16px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.09);display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:rgba(201,168,76,0.35);text-transform:uppercase;}
-.p-files{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px}
+.p-files{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .p-file-link{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.2);padding:3px 8px;text-decoration:none;transition:background .2s;display:inline-flex;align-items:center;gap:4px;}
 .p-file-link:hover{background:rgba(201,168,76,0.1)}
+.p-img-attachment{
+  display:block;
+  width:180px;
+  height:90px;
+  border-radius:999px;
+  object-fit:cover;
+  border:1px solid rgba(201,168,76,0.3);
+  filter:sepia(15%) contrast(1.05) brightness(0.9);
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+  cursor:pointer;
+}
+.p-img-attachment:hover{
+  transform:scale(1.03);
+  border-color:rgba(201,168,76,0.6);
+  box-shadow:0 4px 20px rgba(0,0,0,0.4),0 0 20px rgba(201,168,76,0.1);
+}
 .p-admin-btns{display:none;position:absolute;top:10px;right:10px;gap:6px}
 .admin-mode .p-admin-btns{display:flex}
 .edit-btn,.del-btn{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border:1px solid;cursor:pointer;background:var(--dark);}
@@ -874,6 +890,17 @@ function renderFileTags(files) {
   ).join('') + '</div>';
 }
 
+function renderFileAttachments(files) {
+  if (!files || !files.length) return '';
+  const items = files.map(f => {
+    if (f.type && f.type.startsWith('image/')) {
+      return `<a href="${f.url}" target="_blank"><img class="p-img-attachment" src="${f.url}" alt="${f.name}" loading="lazy"></a>`;
+    }
+    return `<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`;
+  }).join('');
+  return `<div class="p-files">${items}</div>`;
+}
+
 // ── PARTICLE CANVAS ──
 (function(){
   const canvas = document.getElementById('particle-canvas');
@@ -1138,7 +1165,7 @@ function renderPosts() {
     <div class="p-tag">${p.cat}</div>
     <div class="p-title">${p.title}</div>
     <div class="p-body">${p.body}</div>
-    ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
+    ${renderFileAttachments(p.files)}
     <div class="p-meta"><span>${p.attr}</span><span>${p.date}</span></div>
   </div>`).join('');
   onScroll();
@@ -1156,7 +1183,7 @@ function renderBlog() {
     ${p.cat ? `<div class="p-tag">${p.cat}</div>` : ''}
     <div class="p-title">${p.title}</div>
     <div class="p-body">${p.body}</div>
-    ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
+    ${renderFileAttachments(p.files)}
     <div class="p-meta"><span>${p.author||''}</span><span>${p.date}</span></div>
   </div>`).join('');
   onScroll();
@@ -1175,7 +1202,7 @@ function renderBooks() {
     <div class="p-title">${b.title}</div>
     ${b.author ? `<div class="p-body" style="margin-bottom:10px">${b.author}</div>` : ''}
     ${b.desc ? `<div class="p-body">${b.desc}</div>` : ''}
-    ${b.file ? `<div class="p-files" style="margin-top:12px"><a class="p-file-link" href="${b.file.url}" download="${b.file.name}" target="_blank">📄 ${b.file.name}</a></div>` : ''}
+    ${b.file ? renderFileAttachments([b.file]) : ''}
     <div class="p-meta"><span>${b.date}</span></div>
   </div>`).join('');
   onScroll();
