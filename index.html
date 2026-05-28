@@ -292,19 +292,22 @@ body.cursor-hover #cursor-ring{width:52px;height:52px;border-color:var(--gold)}
 .c-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--goldl)}
 .c-loc{font-family:'Cinzel',serif;font-size:7.5px;color:var(--muted);letter-spacing:1px}
 .c-text{font-family:'Amiri',serif;font-size:15px;color:rgba(250,246,236,0.58);line-height:1.7;padding-left:48px}
-.c-del{display:none;position:absolute;top:20px;right:0;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:#e07070;border:1px solid rgba(220,80,80,0.25);background:var(--dark);padding:3px 9px;cursor:pointer;text-transform:uppercase;}
-.admin-mode .c-del{display:block}
+.c-del{display:none;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:#e07070;border:1px solid rgba(220,80,80,0.25);background:var(--dark);padding:3px 9px;cursor:pointer;text-transform:uppercase;}
+.admin-mode .c-del{display:inline-block !important}
 .no-comments{font-family:'Amiri',serif;font-size:16px;color:var(--muted);text-align:center;font-style:italic;padding:32px 0}
-.c-reply-btn{background:none;border:none;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(201,168,76,0.4);cursor:pointer;padding:6px 0 0 48px;transition:color .2s;}
+.c-reply-btn{background:none;border:none;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(201,168,76,0.38);cursor:pointer;padding:4px 0 0 0;transition:color .2s;margin-right:10px;}
 .c-reply-btn:hover{color:var(--gold)}
-.c-replies{padding-left:48px;margin-top:4px}
-.c-reply{padding:12px 0;border-top:1px solid rgba(201,168,76,0.05);position:relative;}
-.c-reply .c-head{margin-bottom:6px}
-.c-reply .c-av{width:28px;height:28px;font-size:9px}
-.c-reply .c-text{font-size:14px;padding-left:40px}
-.c-reply .c-del{top:12px}
-.reply-form{margin-top:10px;padding-left:48px;display:none}
+.c-actions{display:flex;align-items:center;padding-left:48px;margin-top:4px;gap:4px;flex-wrap:wrap;}
+.c-thread{margin-left:24px;margin-top:8px;border-left:1px solid rgba(201,168,76,0.1);padding-left:14px;}
+.c-reply{padding:10px 0;position:relative;}
+.c-reply+.c-reply{border-top:1px solid rgba(201,168,76,0.05)}
+.c-reply .c-av{width:26px;height:26px;font-size:8px;flex-shrink:0}
+.c-reply .c-text{font-size:14px;padding-left:38px}
+.c-reply .c-actions{padding-left:38px}
+.c-reply-to{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:rgba(201,168,76,0.35);margin-bottom:3px;padding-left:38px}
+.reply-form{margin-top:8px;display:none;background:rgba(201,168,76,0.03);border-left:2px solid rgba(201,168,76,0.15);padding:12px 14px;}
 .reply-form.open{display:block}
+.reply-form .rf-who{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:8px;}
 .reply-form .rf-row{display:flex;gap:8px;margin-bottom:8px}
 .reply-form input{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.12);color:var(--cream);font-family:'Amiri',serif;font-size:14px;padding:8px 12px;outline:none;transition:border-color .25s;flex:1;-webkit-appearance:none;border-radius:0;}
 .reply-form input:focus{border-color:rgba(201,168,76,0.4)}
@@ -313,6 +316,20 @@ body.cursor-hover #cursor-ring{width:52px;height:52px;border-color:var(--gold)}
 .reply-form .rf-btns{display:flex;gap:8px;margin-top:8px}
 .reply-cancel-btn{background:none;border:1px solid rgba(201,168,76,0.15);color:rgba(245,230,184,0.4);font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:border-color .2s,color .2s;}
 .reply-cancel-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--muted)}
+/* ── BAN SYSTEM ── */
+.banned-screen{position:fixed;inset:0;z-index:9999;background:#03120a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;}
+.ban-icon{font-size:48px;margin-bottom:24px;opacity:0.6}
+.ban-title{font-family:'Cinzel Decorative',serif;font-size:18px;color:#c9a84c;margin-bottom:14px;letter-spacing:2px}
+.ban-msg{font-family:'Amiri',serif;font-size:16px;color:rgba(245,230,184,0.45);max-width:420px;line-height:1.9;font-style:italic}
+.c-ban{display:none;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:#e8b06a;border:1px solid rgba(232,176,106,0.25);background:var(--dark);padding:3px 9px;cursor:pointer;text-transform:uppercase;transition:background .2s;}
+.c-ban:hover{background:rgba(232,176,106,0.1)}
+.admin-mode .c-ban{display:inline-block}
+.ban-list-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(201,168,76,0.07);gap:12px;}
+.ban-list-item:last-child{border-bottom:none}
+.ban-list-name{font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:1px;color:var(--goldl)}
+.ban-list-meta{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:rgba(245,230,184,0.3);flex:1}
+.unban-btn{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;color:#80c080;border:1px solid rgba(128,192,128,0.25);background:var(--dark);padding:3px 9px;cursor:pointer;text-transform:uppercase;transition:background .2s;white-space:nowrap;}
+.unban-btn:hover{background:rgba(128,192,128,0.1)}
 
 /* ── BACK TO HOME BUTTON ── */
 .back-home-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,76,0.5);border:none;background:none;cursor:pointer;padding:0;margin-bottom:28px;transition:color .2s;}
@@ -423,6 +440,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   <div class="nav-admin-area">
     <button class="btn-sm" id="admin-nav-btn" onclick="openLoginPanel()">✦ <span>Admin</span></button>
     <button class="btn-sm" id="edit-text-btn" style="display:none" onclick="openEditPanel('pagetext')">✎ Edit Text</button>
+    <button class="btn-sm" id="manage-bans-btn" style="display:none" onclick="openEditPanel('bans')">⛔ Bans</button>
     <button class="btn-sm danger" id="exit-admin-btn" style="display:none" onclick="exitAdmin()">Exit</button>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -855,6 +873,7 @@ let posts = [];
 let blogPosts = [];
 let books = [];
 let comments = [];
+let bannedNames = []; // {name, bannedAt}
 let galleryItems = [
   {id:'g1',name:"Bawajī Sāhib رَضِيَ اللهُ عَنْهُ",sub:"Ḥazrat Khwājā Ḥāfiz ʿAbd al-Karīm · 1848–1936",src:"",files:[],placeholder:true},
   {id:'g2',name:"Sānī Pāk رَضِيَ اللهُ عَنْهُ",sub:"Ḥazrat Khwājā Ḥāfiz ʿAbd al-Raḥmān al-Sānī",src:"",files:[],placeholder:true},
@@ -1254,99 +1273,301 @@ function renderComments() {
   const noMsg = document.getElementById('no-comments-msg');
   if (!comments.length) { list.innerHTML=''; list.appendChild(noMsg); noMsg.style.display='block'; return; }
   noMsg.style.display='none';
-  list.innerHTML = comments.map((c,i) => {
-    const replies = (c.replies||[]).map((r,j) => `
-      <div class="c-reply">
-        <div class="c-head"><div class="c-av">${r.initials}</div><div><div class="c-name">${r.name}</div><div class="c-loc">${r.loc||'Visitor'}</div></div></div>
-        <div class="c-text">${r.text}</div>
-        <button class="c-del" onclick="deleteReply(${i},${j})">Delete</button>
-      </div>`).join('');
-    return `
-  <div class="comment" id="comment-${i}">
-    <div class="c-head"><div class="c-av">${c.initials}</div><div><div class="c-name">${c.name}</div><div class="c-loc">${c.loc||'Visitor'}</div></div></div>
-    <div class="c-text">${c.text}</div>
-    <button class="c-del" onclick="deleteComment(${i})">Delete</button>
-    <button class="c-reply-btn" onclick="toggleReplyForm(${i})">↩ Reply</button>
-    <div class="reply-form" id="reply-form-${i}">
+  list.innerHTML = comments.map((c,i) => renderComment(c, [i], 0)).join('');
+}
+
+function renderComment(c, path, depth) {
+  const pathStr = path.join('-');
+  const formId = 'rf-' + pathStr;
+  const avatarSize = depth === 0 ? '' : 'width:26px;height:26px;font-size:8px';
+  const textSize   = depth === 0 ? '' : 'font-size:14px';
+  const wrapClass  = depth === 0 ? 'comment' : 'c-reply';
+  const delHandler = `deleteByPath('[${path.join(',')}]')`;
+  const threadHtml = (c.replies && c.replies.length)
+    ? `<div class="c-thread">${c.replies.map((r,j) => renderComment(r, [...path,j], depth+1)).join('')}</div>`
+    : '';
+  return `
+  <div class="${wrapClass}">
+    <div class="c-head"><div class="c-av" style="${avatarSize}">${c.initials||'?'}</div><div><div class="c-name">${c.name}</div><div class="c-loc">${c.loc||'Visitor'}</div></div></div>
+    <div class="c-text" style="${textSize}">${c.text}</div>
+    <div class="c-actions">
+      <button class="c-reply-btn" onclick="openReplyForm('${formId}')">↩ Reply</button>
+      <button class="c-del" onclick="${delHandler}">Delete</button>
+      <button class="c-ban" onclick="banUserByIdx(${path[0]})">Ban</button>
+    </div>
+    <div class="reply-form" id="${formId}">
+      <div class="rf-who">Replying to ${c.name}</div>
       <div class="rf-row">
-        <input type="text" id="rf-name-${i}" placeholder="Your name" autocomplete="given-name">
-        <input type="text" id="rf-loc-${i}" placeholder="Location (optional)" autocomplete="country-name">
+        <input type="text" id="${formId}-name" placeholder="Your name" autocomplete="given-name">
+        <input type="text" id="${formId}-loc"  placeholder="Location (optional)" autocomplete="country-name">
       </div>
-      <textarea id="rf-msg-${i}" placeholder="Write your reply..."></textarea>
+      <textarea id="${formId}-msg" placeholder="Write your reply..."></textarea>
       <div class="rf-btns">
-        <button class="sub-btn" style="font-size:7.5px;padding:9px 20px" onclick="submitReply(${i})">Post Reply ✦</button>
-        <button class="reply-cancel-btn" onclick="toggleReplyForm(${i})">Cancel</button>
+        <button class="sub-btn" style="font-size:7.5px;padding:9px 20px" onclick="submitReply('${formId}','[${path.join(',')}]')">Post Reply ✦</button>
+        <button class="reply-cancel-btn" onclick="openReplyForm('${formId}')">Cancel</button>
       </div>
     </div>
-    ${replies ? `<div class="c-replies">${replies}</div>` : ''}
+    ${threadHtml}
   </div>`;
-  }).join('');
 }
 
-function toggleReplyForm(i) {
-  const form = document.getElementById('reply-form-'+i);
+let activeReplyForm = null;
+function openReplyForm(formId) {
+  if (activeReplyForm && activeReplyForm !== formId) {
+    const prev = document.getElementById(activeReplyForm);
+    if (prev) prev.classList.remove('open');
+  }
+  const form = document.getElementById(formId);
+  if (!form) return;
   form.classList.toggle('open');
-  if (form.classList.contains('open')) document.getElementById('rf-name-'+i).focus();
+  activeReplyForm = form.classList.contains('open') ? formId : null;
+  if (form.classList.contains('open')) {
+    const inp = document.getElementById(formId+'-name');
+    if (inp) setTimeout(()=>inp.focus(), 50);
+  }
 }
 
-async function submitReply(i) {
-  const nameEl = document.getElementById('rf-name-'+i);
-  const locEl  = document.getElementById('rf-loc-'+i);
-  const msgEl  = document.getElementById('rf-msg-'+i);
+async function submitReply(formId, pathJson) {
+  const nameEl = document.getElementById(formId+'-name');
+  const locEl  = document.getElementById(formId+'-loc');
+  const msgEl  = document.getElementById(formId+'-msg');
   if (!nameEl || !msgEl) return;
   const name = nameEl.value.trim();
   const loc  = locEl ? locEl.value.trim() : '';
   const text = msgEl.value.trim();
   if (!name) { nameEl.style.borderColor='rgba(224,112,112,0.6)'; nameEl.focus(); return; }
   if (!text) { msgEl.style.borderColor='rgba(224,112,112,0.6)'; msgEl.focus(); return; }
+  if (checkBanOnPost(name)) { showBannedScreen(); return; }
   nameEl.style.borderColor=''; msgEl.style.borderColor='';
-  const btn = nameEl.closest('.reply-form').querySelector('.sub-btn');
-  if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
+  const btn = document.getElementById(formId).querySelector('.sub-btn');
+  if (btn) { btn.textContent='Posting...'; btn.disabled=true; }
   try {
-    if (!Array.isArray(comments[i].replies)) comments[i].replies = [];
-    comments[i].replies.push({name, loc, text, initials: name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
+    const reply = {name, loc, text, initials: name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(), replies:[]};
+    const path = JSON.parse(pathJson);
+    // Walk the path to find the target node
+    let node = comments[path[0]];
+    for (let k=1; k<path.length; k++) { node = node.replies[path[k]]; }
+    if (!Array.isArray(node.replies)) node.replies = [];
+    node.replies.push(reply);
     await dbSet('comments', comments);
     renderComments();
   } catch(e) {
     console.error('Reply save error:', e);
-    if (btn) { btn.textContent = 'Post Reply'; btn.disabled = false; }
+    if (btn) { btn.textContent='Post Reply ✦'; btn.disabled=false; }
   }
 }
 
-async function deleteReply(i, j) {
-  if (confirm('Delete this reply?')) {
-    comments[i].replies.splice(j, 1);
+async function deleteByPath(pathJson) {
+  if (!confirm('Delete this message and all its replies?')) return;
+  const path = JSON.parse(pathJson);
+  if (path.length === 1) {
+    comments.splice(path[0], 1);
+  } else {
+    let parent = comments[path[0]];
+    for (let k=1; k<path.length-1; k++) { parent = parent.replies[path[k]]; }
+    parent.replies.splice(path[path.length-1], 1);
+  }
+  await dbSet('comments', comments);
+  renderComments();
+}
+
+
+// ── BAN SYSTEM ──
+function showBannedScreen() {
+  document.body.innerHTML = '<div class="banned-screen"><div class="ban-icon">🚫</div><div class="ban-title">Access Restricted</div><div class="ban-msg">You have been restricted from accessing this site. Please contact the administrator if you believe this is an error.</div></div>';
+}
+
+function banUserByIdx(commentIdx) {
+  const c = comments[commentIdx];
+  if (c) banUser(commentIdx, c.name);
+}
+
+async function banUser(commentIdx, name) {
+  if (!confirm(`Ban "${name}"? They will no longer be able to post on the site.`)) return;
+  if (!bannedNames.find(b=>b.name===name)) {
+    bannedNames.push({name, bannedAt: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
+    await dbSet('bannedNames', bannedNames);
+  }
+  if (confirm(`Also delete ${name}'s comment?`)) {
+    comments.splice(commentIdx, 1);
     await dbSet('comments', comments);
     renderComments();
   }
+  renderBanList();
 }
 
-// ── ADMIN ──
-function openLoginPanel() { closeDrawer(); document.getElementById('login-overlay').classList.add('open'); setTimeout(()=>document.getElementById('pw-input').focus(),100); }
-function checkLogin() {
-  if (document.getElementById('pw-input').value === ADMIN_PW) enterAdmin();
-  else { document.getElementById('pw-err').style.display='block'; document.getElementById('pw-input').value=''; }
+async function unbanUser(name) {
+  if (!confirm(`Unban "${name}"?`)) return;
+  bannedNames = bannedNames.filter(b=>b.name!==name);
+  await dbSet('bannedNames', bannedNames);
+  renderBanList();
 }
-function enterAdmin() {
-  adminMode=true; closeOverlay('login-overlay');
-  document.getElementById('pw-input').value=''; document.getElementById('pw-err').style.display='none';
-  document.getElementById('exit-admin-btn').style.display=''; document.getElementById('admin-nav-btn').style.display='none';
-  document.getElementById('edit-text-btn').style.display='';
-  document.body.classList.add('admin-mode');
-  ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row','add-book-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='block';});
+
+function renderBanList() {
+  const el = document.getElementById('ban-list');
+  if (!el) return;
+  if (!bannedNames.length) { el.innerHTML='<p style="font-family:'Amiri',serif;font-size:14px;color:var(--muted);font-style:italic;padding:12px 0">No banned users.</p>'; return; }
+  el.innerHTML = bannedNames.map(b=>`
+    <div class="ban-list-item">
+      <div><div class="ban-list-name">${b.name}</div><div class="ban-list-meta">Banned ${b.bannedAt}</div></div>
+      <button class="unban-btn" onclick="unbanUser('${b.name.replace(/'/g,"\'")}')">✓ Unban</button>
+    </div>`).join('');
+}
+
+function checkBanOnPost(name) {
+  return bannedNames.some(b => b.name.trim().toLowerCase() === name.trim().toLowerCase());
+}
+
+async function saveBook(){
+  const title=document.getElementById('ep-btitle').value.trim();
+  if(!title) { alert('Please enter a book title.'); return; }
+  if(pendingFiles.length===0){ alert('Please choose a PDF or document file to upload.'); return; }
+  if(pendingFiles.some(f=>f.uploading)){ alert('Please wait — file is still uploading.'); return; }
+  const file=pendingFiles[0]||null;
+  books.unshift({title,author:document.getElementById('ep-bauthor').value.trim(),desc:document.getElementById('ep-bdesc').value.trim(),file,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
+  await dbSet('books',books);
+  renderBooks(); showOk();
+}
+async function deleteBook(i){if(confirm('Remove this book?')){books.splice(i,1);await dbSet('books',books);renderBooks();}}
+
+function openLightbox(id){const g=galleryItems.find(x=>x.id===id);if(!g||!g.src)return;document.getElementById('lb-img').src=g.src;document.getElementById('lb-name').textContent=g.name;document.getElementById('lb-sub').textContent=g.sub;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+function closeOverlay(id){document.getElementById(id).classList.remove('open');}
+function closeOverlayOut(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
+
+async function handleAudioUpload(input) {
+  const f = input.files[0];
+  if (!f) return;
+  const status = document.getElementById('audio-upload-status');
+  status.style.display = 'block';
+  status.textContent = 'Uploading — please wait, this may take a minute for large files…';
+  input.disabled = true;
+  try {
+    const url = await uploadFileToStorage(f);
+    // Save URL to DB
+    await dbSet('audioSrc', { url, name: f.name });
+    // Update live player
+    audioEl.src = url;
+    audioEl.load();
+    status.textContent = 'Uploaded successfully ✓';
+    setTimeout(() => { showOk(); }, 600);
+  } catch(err) {
+    status.textContent = 'Upload failed: ' + err.message;
+    input.disabled = false;
+  }
+}
+
+// ── STATIC PAGE TEXT ──
+const defaultSiteText = {
+  bismillah: 'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',
+  heroAr: 'دربارِ عالیہ ایدگاہ شریف',
+  heroEn: 'Darbar-e-Aaliyah Eidgah Sharif',
+  heroSub: 'Rawalpindi, Pakistan \u00a0·\u00a0 Silsila-e-Naqshbandiyya \u00a0·\u00a0 Est. 1848',
+  welcomeLabel: 'Welcome',
+  welcomeTitle: 'Darbar-e-Aaliyah Eidgah Sharif',
+  welcomeBody: 'A blessed sanctuary of the Naqshbandī path in Rawalpindi, founded in 1848 by Ḥazrat Bawajī Sāhib رَضِيَ اللهُ عَنْهُ. Explore the lineage, the chain of transmission, and the writings of the Shayukh.',
+  shayukhLabel: 'The Custodians of the Darbar',
+  shayukhTitle: 'Shayukh of Eidgah Sharif',
+  galleryLabel: 'The Blessed Faces',
+  galleryTitle: 'Gallery of the Shayukh',
+  galleryIntro: 'These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.',
+  communityLabel: 'The Community',
+  communityTitle: 'Leave Your Salām',
+  communityForm: 'Share a reflection or send salām to the Darbar',
+  noComments: 'No messages yet — be the first to send your salām.',
+  shajraLabel: 'The Blessed Chain of Transmission',
+  shajraTitle: 'Shajra-e-Mubārak',
+  shajraBody: 'The unbroken chain of spiritual transmission from the Seal of Prophets ﷺ to the present custodians of Eidgah Sharif — through the Naqshbandī silsila.',
+  shajraHeadAr: 'سِلسِلَۂ عَالِیَہ نَقشبندِیَّہ',
+  shajraHeadSub: 'Silsila-e-Aaliyah Naqshbandiyya · Darbar-e-Aaliyah Eidgah Sharif',
+  biosLabel: 'From the Darbar',
+  biosTitle: 'Biographies of the Shayukh',
+  postsLabel: 'From Eidgah Sharif',
+  postsTitle: 'Posts',
+  booksLabel: 'The Library',
+  booksTitle: 'Books & Texts',
+  booksIntro: 'A collection of blessed texts, books, and documents from the Darbar.',
+  audioTitle: 'Lasānī Pāk رَضِيَ اللهُ عَنْهُ',
+  audioSub: 'Bayān · Eidgah Sharif',
+  footerAr: 'دربارِ عالیہ ایدگاہ شریف',
+  footerEn: 'Darbar-e-Aaliyah Eidgah Sharif',
+  footerText: 'Asghar Mall Road · Rawalpindi · Pakistan\nSilsila-e-Aaliyah Naqshbandiyya · Est. 1848\n\nصَلَّى اللهُ عَلَيْهِ وَسَلَّم \u00a0·\u00a0 رَضِيَ اللهُ عَنْهُمْ أَجْمَعِيْن'
+};
+let siteText = {...defaultSiteText};
+
+function applyPageText(t) {
+  // Hero
+  const bism = document.querySelector('.bismillah'); if(bism) bism.textContent = t.bismillah;
+  const heroAr = document.querySelector('.hero-ar'); if(heroAr) heroAr.textContent = t.heroAr;
+  const heroEn = document.querySelector('.hero-en'); if(heroEn) heroEn.textContent = t.heroEn;
+  const heroSub = document.querySelector('.hero-sub'); if(heroSub) heroSub.textContent = t.heroSub;
+  // Welcome
+  document.querySelectorAll('[data-pt]').forEach(el => {
+    const k = el.getAttribute('data-pt');
+    if (t[k] !== undefined) {
+      if (el.tagName === 'P' || el.tagName === 'DIV') el.innerHTML = t[k].replace(/\n/g,'<br>');
+      else el.textContent = t[k];
+    }
+  });
+  // Audio player
+  const at = document.querySelector('.audio-title'); if(at) at.textContent = t.audioTitle;
+  const as = document.querySelector('.audio-subtitle'); if(as) as.textContent = t.audioSub;
+  // Footer (all footers)
+  document.querySelectorAll('.f-logo').forEach(el => el.textContent = t.footerAr);
+  document.querySelectorAll('.f-ar').forEach(el => el.textContent = t.footerEn);
+  document.querySelectorAll('.f-text').forEach(el => el.innerHTML = t.footerText.replace(/\n/g,'<br>'));
+  // Shajra header
+  const shHead = document.querySelector('.shajra-head p'); if(shHead) shHead.textContent = t.shajraHeadAr;
+  const shSub = document.querySelector('.shajra-head small'); if(shSub) shSub.textContent = t.shajraHeadSub;
+}
+
+async function savePageText() {
+  const fields = ['bismillah','heroAr','heroEn','heroSub','welcomeLabel','welcomeTitle','welcomeBody',
+    'shayukhLabel','shayukhTitle','galleryLabel','galleryTitle','galleryIntro',
+    'communityLabel','communityTitle','communityForm','noComments',
+    'shajraLabel','shajraTitle','shajraBody','shajraHeadAr','shajraHeadSub',
+    'biosLabel','biosTitle','postsLabel','postsTitle','booksLabel','booksTitle','booksIntro',
+    'audioTitle','audioSub','footerAr','footerEn','footerText'];
+  fields.forEach(k => {
+    const el = document.getElementById('pt-'+k);
+    if (el) siteText[k] = el.value;
+  });
+  await dbSet('siteText', siteText);
+  applyPageText(siteText);
+  showOk();
+}
+
+function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderBooks();renderComments();}
+
+// ── LOAD FROM SUPABASE ON START ──
+async function loadFromDB() {
+  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments, savedAudio, savedSiteText, savedBanned] = await Promise.all([
+    dbGet('quote'), dbGet('shayukh'), dbGet('gallery'),
+    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments'), dbGet('audioSrc'), dbGet('siteText'), dbGet('bannedNames')
+  ]);
+  if (quote) {
+    document.getElementById('quote-text-el').textContent = quote.text;
+    document.getElementById('quote-attr-el').textContent = quote.attr;
+  }
+  if (savedSiteText) { siteText = {...defaultSiteText, ...savedSiteText}; applyPageText(siteText); }
+  if (savedShayukh) shayukhData = savedShayukh;
+  if (savedGallery) galleryItems = savedGallery;
+  if (savedPosts) posts = savedPosts;
+  if (savedBlog) blogPosts = savedBlog;
+  if (savedBooks) books = savedBooks;
+  if (savedComments) comments = savedComments;
+  if (savedBanned) bannedNames = savedBanned;
+  if (savedAudio && savedAudio.url) {
+    audioEl.src = savedAudio.url;
+    audioEl.load();
+  }
   renderAll();
+  setTimeout(onScroll, 100);
 }
-function exitAdmin() {
-  adminMode=false; document.getElementById('exit-admin-btn').style.display='none'; document.getElementById('admin-nav-btn').style.display=''; document.getElementById('edit-text-btn').style.display='none';
-  document.body.classList.remove('admin-mode');
-  ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row','add-book-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-  renderAll();
-}
-
-// ── EDIT PANEL ──
-function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function openEditPanel(type, idx) {
+loadFromDB();
+</script>
+</body>
+</html>function openEditPanel(type, idx) {
   pendingFiles = [];
   const c = document.getElementById('edit-panel-content');
   const fileUploadHtml = `
@@ -1549,6 +1770,14 @@ function openEditPanel(type, idx) {
     <div class="fg"><label>Footer address / details</label><textarea id="pt-footerText" style="height:80px">${esc(t.footerText)}</textarea></div>
 
     <button class="pub-btn" onclick="savePageText()">Save All Text ✦</button><div class="ok" id="ep-ok">Saved ✦</div>`;
+  }
+  if (type === 'bans') {
+    c.innerHTML = `<div class="admin-badge">Banned Users</div>
+    <p class="hint">Banned users cannot post comments. Names are matched on submission.</p>
+    <div id="ban-list"></div>`;
+    renderBanList();
+    document.getElementById('edit-overlay').classList.add('open');
+    return;
   }
   if (type === 'audio') {
     document.getElementById('edit-panel-content').innerHTML = `
@@ -1831,3 +2060,5 @@ loadFromDB();
 </script>
 </body>
 </html>
+
+
