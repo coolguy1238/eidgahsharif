@@ -755,6 +755,54 @@ const ADMIN_PW = 'eidgah1848';
 let adminMode = false;
 let currentPage = 'home';
 
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openLoginPanel() {
+  if (adminMode) return;
+  document.getElementById('login-overlay').classList.add('open');
+  setTimeout(() => { const pw = document.getElementById('pw-input'); if(pw) pw.focus(); }, 100);
+}
+
+function checkLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === ADMIN_PW) {
+    adminMode = true;
+    document.body.classList.add('admin-mode');
+    document.getElementById('login-overlay').classList.remove('open');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-err').style.display = 'none';
+    document.getElementById('admin-nav-btn').style.display = 'none';
+    document.getElementById('edit-text-btn').style.display = '';
+    document.getElementById('manage-bans-btn').style.display = '';
+    document.getElementById('exit-admin-btn').style.display = '';
+    document.getElementById('quote-edit-row').style.display = '';
+    document.getElementById('gallery-add-row').style.display = '';
+    document.getElementById('add-post-row').style.display = '';
+    document.getElementById('add-blog-row').style.display = '';
+    document.getElementById('add-book-row').style.display = '';
+    renderAll();
+  } else {
+    document.getElementById('pw-err').style.display = 'block';
+  }
+}
+
+function exitAdmin() {
+  adminMode = false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-nav-btn').style.display = '';
+  document.getElementById('edit-text-btn').style.display = 'none';
+  document.getElementById('manage-bans-btn').style.display = 'none';
+  document.getElementById('exit-admin-btn').style.display = 'none';
+  document.getElementById('quote-edit-row').style.display = 'none';
+  document.getElementById('gallery-add-row').style.display = 'none';
+  document.getElementById('add-post-row').style.display = 'none';
+  document.getElementById('add-blog-row').style.display = 'none';
+  document.getElementById('add-book-row').style.display = 'none';
+  renderAll();
+}
+
 // ── PAGE NAVIGATION ──
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1268,10 +1316,15 @@ function renderBooks() {
   onScroll();
 }
 
+function ensureReplies(c) {
+  if (!Array.isArray(c.replies)) c.replies = [];
+  c.replies.forEach(ensureReplies);
+}
 function renderComments() {
   const list = document.getElementById('comment-list');
   const noMsg = document.getElementById('no-comments-msg');
   if (!comments.length) { list.innerHTML=''; list.appendChild(noMsg); noMsg.style.display='block'; return; }
+  comments.forEach(ensureReplies);
   noMsg.style.display='none';
   list.innerHTML = comments.map((c,i) => renderComment(c, [i], 0)).join('');
 }
@@ -1417,153 +1470,6 @@ function checkBanOnPost(name) {
   return bannedNames.some(b => b.name.trim().toLowerCase() === name.trim().toLowerCase());
 }
 
-async function saveBook(){
-  const title=document.getElementById('ep-btitle').value.trim();
-  if(!title) { alert('Please enter a book title.'); return; }
-  if(pendingFiles.length===0){ alert('Please choose a PDF or document file to upload.'); return; }
-  if(pendingFiles.some(f=>f.uploading)){ alert('Please wait — file is still uploading.'); return; }
-  const file=pendingFiles[0]||null;
-  books.unshift({title,author:document.getElementById('ep-bauthor').value.trim(),desc:document.getElementById('ep-bdesc').value.trim(),file,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
-  await dbSet('books',books);
-  renderBooks(); showOk();
-}
-async function deleteBook(i){if(confirm('Remove this book?')){books.splice(i,1);await dbSet('books',books);renderBooks();}}
-
-function openLightbox(id){const g=galleryItems.find(x=>x.id===id);if(!g||!g.src)return;document.getElementById('lb-img').src=g.src;document.getElementById('lb-name').textContent=g.name;document.getElementById('lb-sub').textContent=g.sub;document.getElementById('lightbox').classList.add('open');}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-function closeOverlay(id){document.getElementById(id).classList.remove('open');}
-function closeOverlayOut(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
-
-async function handleAudioUpload(input) {
-  const f = input.files[0];
-  if (!f) return;
-  const status = document.getElementById('audio-upload-status');
-  status.style.display = 'block';
-  status.textContent = 'Uploading — please wait, this may take a minute for large files…';
-  input.disabled = true;
-  try {
-    const url = await uploadFileToStorage(f);
-    // Save URL to DB
-    await dbSet('audioSrc', { url, name: f.name });
-    // Update live player
-    audioEl.src = url;
-    audioEl.load();
-    status.textContent = 'Uploaded successfully ✓';
-    setTimeout(() => { showOk(); }, 600);
-  } catch(err) {
-    status.textContent = 'Upload failed: ' + err.message;
-    input.disabled = false;
-  }
-}
-
-// ── STATIC PAGE TEXT ──
-const defaultSiteText = {
-  bismillah: 'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',
-  heroAr: 'دربارِ عالیہ ایدگاہ شریف',
-  heroEn: 'Darbar-e-Aaliyah Eidgah Sharif',
-  heroSub: 'Rawalpindi, Pakistan \u00a0·\u00a0 Silsila-e-Naqshbandiyya \u00a0·\u00a0 Est. 1848',
-  welcomeLabel: 'Welcome',
-  welcomeTitle: 'Darbar-e-Aaliyah Eidgah Sharif',
-  welcomeBody: 'A blessed sanctuary of the Naqshbandī path in Rawalpindi, founded in 1848 by Ḥazrat Bawajī Sāhib رَضِيَ اللهُ عَنْهُ. Explore the lineage, the chain of transmission, and the writings of the Shayukh.',
-  shayukhLabel: 'The Custodians of the Darbar',
-  shayukhTitle: 'Shayukh of Eidgah Sharif',
-  galleryLabel: 'The Blessed Faces',
-  galleryTitle: 'Gallery of the Shayukh',
-  galleryIntro: 'These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.',
-  communityLabel: 'The Community',
-  communityTitle: 'Leave Your Salām',
-  communityForm: 'Share a reflection or send salām to the Darbar',
-  noComments: 'No messages yet — be the first to send your salām.',
-  shajraLabel: 'The Blessed Chain of Transmission',
-  shajraTitle: 'Shajra-e-Mubārak',
-  shajraBody: 'The unbroken chain of spiritual transmission from the Seal of Prophets ﷺ to the present custodians of Eidgah Sharif — through the Naqshbandī silsila.',
-  shajraHeadAr: 'سِلسِلَۂ عَالِیَہ نَقشبندِیَّہ',
-  shajraHeadSub: 'Silsila-e-Aaliyah Naqshbandiyya · Darbar-e-Aaliyah Eidgah Sharif',
-  biosLabel: 'From the Darbar',
-  biosTitle: 'Biographies of the Shayukh',
-  postsLabel: 'From Eidgah Sharif',
-  postsTitle: 'Posts',
-  booksLabel: 'The Library',
-  booksTitle: 'Books & Texts',
-  booksIntro: 'A collection of blessed texts, books, and documents from the Darbar.',
-  audioTitle: 'Lasānī Pāk رَضِيَ اللهُ عَنْهُ',
-  audioSub: 'Bayān · Eidgah Sharif',
-  footerAr: 'دربارِ عالیہ ایدگاہ شریف',
-  footerEn: 'Darbar-e-Aaliyah Eidgah Sharif',
-  footerText: 'Asghar Mall Road · Rawalpindi · Pakistan\nSilsila-e-Aaliyah Naqshbandiyya · Est. 1848\n\nصَلَّى اللهُ عَلَيْهِ وَسَلَّم \u00a0·\u00a0 رَضِيَ اللهُ عَنْهُمْ أَجْمَعِيْن'
-};
-let siteText = {...defaultSiteText};
-
-function applyPageText(t) {
-  // Hero
-  const bism = document.querySelector('.bismillah'); if(bism) bism.textContent = t.bismillah;
-  const heroAr = document.querySelector('.hero-ar'); if(heroAr) heroAr.textContent = t.heroAr;
-  const heroEn = document.querySelector('.hero-en'); if(heroEn) heroEn.textContent = t.heroEn;
-  const heroSub = document.querySelector('.hero-sub'); if(heroSub) heroSub.textContent = t.heroSub;
-  // Welcome
-  document.querySelectorAll('[data-pt]').forEach(el => {
-    const k = el.getAttribute('data-pt');
-    if (t[k] !== undefined) {
-      if (el.tagName === 'P' || el.tagName === 'DIV') el.innerHTML = t[k].replace(/\n/g,'<br>');
-      else el.textContent = t[k];
-    }
-  });
-  // Audio player
-  const at = document.querySelector('.audio-title'); if(at) at.textContent = t.audioTitle;
-  const as = document.querySelector('.audio-subtitle'); if(as) as.textContent = t.audioSub;
-  // Footer (all footers)
-  document.querySelectorAll('.f-logo').forEach(el => el.textContent = t.footerAr);
-  document.querySelectorAll('.f-ar').forEach(el => el.textContent = t.footerEn);
-  document.querySelectorAll('.f-text').forEach(el => el.innerHTML = t.footerText.replace(/\n/g,'<br>'));
-  // Shajra header
-  const shHead = document.querySelector('.shajra-head p'); if(shHead) shHead.textContent = t.shajraHeadAr;
-  const shSub = document.querySelector('.shajra-head small'); if(shSub) shSub.textContent = t.shajraHeadSub;
-}
-
-async function savePageText() {
-  const fields = ['bismillah','heroAr','heroEn','heroSub','welcomeLabel','welcomeTitle','welcomeBody',
-    'shayukhLabel','shayukhTitle','galleryLabel','galleryTitle','galleryIntro',
-    'communityLabel','communityTitle','communityForm','noComments',
-    'shajraLabel','shajraTitle','shajraBody','shajraHeadAr','shajraHeadSub',
-    'biosLabel','biosTitle','postsLabel','postsTitle','booksLabel','booksTitle','booksIntro',
-    'audioTitle','audioSub','footerAr','footerEn','footerText'];
-  fields.forEach(k => {
-    const el = document.getElementById('pt-'+k);
-    if (el) siteText[k] = el.value;
-  });
-  await dbSet('siteText', siteText);
-  applyPageText(siteText);
-  showOk();
-}
-
-function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderBooks();renderComments();}
-
-// ── LOAD FROM SUPABASE ON START ──
-async function loadFromDB() {
-  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments, savedAudio, savedSiteText, savedBanned] = await Promise.all([
-    dbGet('quote'), dbGet('shayukh'), dbGet('gallery'),
-    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments'), dbGet('audioSrc'), dbGet('siteText'), dbGet('bannedNames')
-  ]);
-  if (quote) {
-    document.getElementById('quote-text-el').textContent = quote.text;
-    document.getElementById('quote-attr-el').textContent = quote.attr;
-  }
-  if (savedSiteText) { siteText = {...defaultSiteText, ...savedSiteText}; applyPageText(siteText); }
-  if (savedShayukh) shayukhData = savedShayukh;
-  if (savedGallery) galleryItems = savedGallery;
-  if (savedPosts) posts = savedPosts;
-  if (savedBlog) blogPosts = savedBlog;
-  if (savedBooks) books = savedBooks;
-  if (savedComments) comments = savedComments;
-  if (savedBanned) bannedNames = savedBanned;
-  if (savedAudio && savedAudio.url) {
-    audioEl.src = savedAudio.url;
-    audioEl.load();
-  }
-  renderAll();
-  setTimeout(onScroll, 100);
-}
-loadFromDB();
 
 function openEditPanel(type, idx) {
   pendingFiles = [];
@@ -1902,7 +1808,7 @@ async function deleteGallery(id){if(confirm('Remove photo?')){galleryItems=galle
 async function submitComment(){
   const name=document.getElementById('c-name').value.trim(), loc=document.getElementById('c-loc').value.trim(), text=document.getElementById('c-msg').value.trim();
   if(!name||!text) return;
-  comments.unshift({name,loc,text,initials:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
+  comments.unshift({name,loc,text,initials:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),replies:[]});
   await dbSet('comments',comments);
   document.getElementById('c-name').value=''; document.getElementById('c-loc').value=''; document.getElementById('c-msg').value='';
   renderComments();
@@ -2055,9 +1961,6 @@ async function loadFromDB() {
   setTimeout(onScroll, 100);
 }
 loadFromDB();
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
