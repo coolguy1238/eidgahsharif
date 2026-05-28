@@ -683,14 +683,42 @@ function showPage(name) {
   setTimeout(onScroll, 80);
 }
 
+// ── SUPABASE ──
+const SUPABASE_URL = 'https://uveyyjxlkmpxitaiwnao.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2ZXl5anhsa21weGl0YWl3bmFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MTgzMjUsImV4cCI6MjA5NTQ5NDMyNX0.hgQrtoScKRND3OZ6NliayoKxIyfScbIA8ZizIpmTv8E';
+
+async function dbGet(key) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_data?key=eq.${encodeURIComponent(key)}&select=value`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    const rows = await res.json();
+    return rows && rows.length ? rows[0].value : null;
+  } catch(e) { return null; }
+}
+
+async function dbSet(key, value) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/site_data`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ key, value })
+    });
+  } catch(e) {}
+}
+
 // ── DATA ──
-const shayukhData = [
-  {num:35,known:"Bawajī Sāhib رَضِيَ اللهُ عَنْهُ",ar:"حضرت خواجہ حافظ عبدالکریم",en:"Ḥazrat Khwājā Ḥāfiz Muḥammad ʿAbd al-Karīm",radi:"رَضِيَ اللهُ عَنْهُ · Born: 11 April 1848 · Passed: 20 May 1936",bio:"Founder of Darbar-e-Aaliyah Eidgah Sharif, Rawalpindi. Took bay'ah from Bābā Faqīr Muḥammad al-Chūrāhī (رَضِيَ اللهُ عَنْهُ) and received Khilāfat in the Naqshbandī silsila. A Ḥāfiz of the Holy Qur'an whose recitation drew Muslims and non-Muslims alike into stillness.",photo:"",files:[],current:false},
-  {num:36,known:"Sānī Pāk رَضِيَ اللهُ عَنْهُ",ar:"حضرت خواجہ حافظ عبدالرحمٰن",en:"Ḥazrat Khwājā Ḥāfiz Muḥammad ʿAbd al-Raḥmān al-Sānī",radi:"رَضِيَ اللهُ عَنْهُ · Second Custodian of Eidgah Sharif",bio:"",photo:"",files:[],current:false},
-  {num:37,known:"Lasānī Pāk رَضِيَ اللهُ عَنْهُ",ar:"حضرت خواجہ حافظ حبیب الرحمٰن",en:"Ḥazrat Khwājā Ḥāfiz Muḥammad Ḥabīb al-Raḥmān al-Lasānī",radi:"رَضِيَ اللهُ عَنْهُ · Third Custodian of Eidgah Sharif",bio:"",photo:"",files:[],current:false},
-  {num:38,known:"Ḥazrat Sāhib · Ḥāfizahullāh",ar:"حضرت حافظ محمد نقیب الرحمٰن",en:"Ḥazrat Ḥāfiz Muḥammad Naqīb al-Raḥmān",radi:"Ḥāfizahullāh Taʿālā · Current Custodian · Born: 4 January 1953",bio:"Custodian of the Holy Shrine of Darbar-e-Aaliyah Eidgah Sharif. Known to all as Ḥazrat Sāhib. Scholar, spiritual guide and beacon of the Naqshbandī way in the present age.",photo:"",files:[],current:true},
-  {num:39,known:"Sāhibjī · Ḥāfizahullāh",ar:"سائبزادہ حسن حسیب الرحمٰن",en:"Ḥazrat Ṣāḥibzādā Muḥammad Ḥasan Ḥaseeb al-Raḥmān",radi:"Ḥāfizahullāh Taʿālā · Son of Ḥazrat Sāhib",bio:"Continuing the blessed work and mission of Eidgah Sharif, walking the path lit by Bawajī Sāhib and all those who came after him.",photo:"",files:[],current:false}
+const defaultShayukhData = [
+  {num:35,known:"Bawaj\u012B S\u0101hib \u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F",ar:"\u062D\u0636\u0631\u062A \u062E\u0648\u0627\u062C\u06C1 \u062D\u0627\u0641\u0638 \u0639\u0628\u062F\u0627\u0644\u06A9\u0631\u06CC\u0645",en:"\u1E24azrat Khw\u0101j\u0101 \u1E24\u0101fiz Mu\u1E25ammad \u02BFAbd al-Kar\u012Bm",radi:"\u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F \u00B7 Born: 11 April 1848 \u00B7 Passed: 20 May 1936",bio:"Founder of Darbar-e-Aaliyah Eidgah Sharif, Rawalpindi. Took bay\u02BFah from B\u0101b\u0101 Faq\u012Br Mu\u1E25ammad al-Ch\u016Br\u0101h\u012B (\u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F) and received Khil\u0101fat in the Naqshband\u012B silsila. A \u1E24\u0101fiz of the Holy Qur\u2019an whose recitation drew Muslims and non-Muslims alike into stillness.",photo:"",files:[],current:false},
+  {num:36,known:"S\u0101n\u012B P\u0101k \u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F",ar:"\u062D\u0636\u0631\u062A \u062E\u0648\u0627\u062C\u06C1 \u062D\u0627\u0641\u0638 \u0639\u0628\u062F\u0627\u0644\u0631\u062D\u0645\u0670\u0646",en:"\u1E24azrat Khw\u0101j\u0101 \u1E24\u0101fiz Mu\u1E25ammad \u02BFAbd al-Ra\u1E25m\u0101n al-S\u0101n\u012B",radi:"\u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F \u00B7 Second Custodian of Eidgah Sharif",bio:"",photo:"",files:[],current:false},
+  {num:37,known:"Las\u0101n\u012B P\u0101k \u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F",ar:"\u062D\u0636\u0631\u062A \u062E\u0648\u0627\u062C\u06C1 \u062D\u0627\u0641\u0638 \u062D\u0628\u06CC\u0628 \u0627\u0644\u0631\u062D\u0645\u0670\u0646",en:"\u1E24azrat Khw\u0101j\u0101 \u1E24\u0101fiz Mu\u1E25ammad \u1E24ab\u012Bb al-Ra\u1E25m\u0101n al-Las\u0101n\u012B",radi:"\u0631\u064E\u0636\u0650\u064A\u064E \u0627\u0644\u0644\u0647\u064F \u0639\u064E\u0646\u0652\u0647\u064F \u00B7 Third Custodian of Eidgah Sharif",bio:"",photo:"",files:[],current:false},
+  {num:38,known:"\u1E24azrat S\u0101hib \u00B7 \u1E24\u0101fizahull\u0101h",ar:"\u062D\u0636\u0631\u062A \u062D\u0627\u0641\u0638 \u0645\u062D\u0645\u062F \u0646\u0642\u06CC\u0628 \u0627\u0644\u0631\u062D\u0645\u0670\u0646",en:"\u1E24azrat \u1E24\u0101fiz Mu\u1E25ammad Naq\u012Bb al-Ra\u1E25m\u0101n",radi:"\u1E24\u0101fizahull\u0101h Ta\u02BF\u0101l\u0101 \u00B7 Current Custodian \u00B7 Born: 4 January 1953",bio:"Custodian of the Holy Shrine of Darbar-e-Aaliyah Eidgah Sharif. Known to all as \u1E24azrat S\u0101hib. Scholar, spiritual guide and beacon of the Naqshband\u012B way in the present age.",photo:"",files:[],current:true},
+  {num:39,known:"S\u0101hibj\u012B \u00B7 \u1E24\u0101fizahull\u0101h",ar:"\u0633\u0627\u0626\u0628\u0632\u0627\u062F\u06C1 \u062D\u0633\u0646 \u062D\u0633\u06CC\u0628 \u0627\u0644\u0631\u062D\u0645\u0670\u0646",en:"\u1E24azrat \u1E62\u0101\u1E25ibz\u0101d\u0101 Mu\u1E25ammad \u1E24asan \u1E24aseeb al-Ra\u1E25m\u0101n",radi:"\u1E24\u0101fizahull\u0101h Ta\u02BF\u0101l\u0101 \u00B7 Son of \u1E24azrat S\u0101hib",bio:"Continuing the blessed work and mission of Eidgah Sharif, walking the path lit by Bawaj\u012B S\u0101hib and all those who came after him.",photo:"",files:[],current:false}
 ];
+let shayukhData = JSON.parse(JSON.stringify(defaultShayukhData));
 
 const shajraData = [
   {n:1,name:"Sayyidina wa Mawlāna Muḥammad ﷺ",radi:"صَلَّى اللهُ عَلَيْهِ وَسَلَّم · Seal of the Prophets",cls:"prophet"},
@@ -1216,62 +1244,78 @@ function previewGalleryUpload(input) {
 
 // ── SAVE FUNCTIONS ──
 function showOk(){const ok=document.getElementById('ep-ok');ok.style.display='block';setTimeout(()=>{ok.style.display='none';closeOverlay('edit-overlay');},1400);}
-function saveQuote(){document.getElementById('quote-text-el').textContent='\u201C'+document.getElementById('ep-qt').value+'\u201D';document.getElementById('quote-attr-el').textContent='— '+document.getElementById('ep-qa').value;showOk();}
 
-function savePost(){
+async function saveQuote(){
+  const text='\u201C'+document.getElementById('ep-qt').value+'\u201D';
+  const attr='— '+document.getElementById('ep-qa').value;
+  document.getElementById('quote-text-el').textContent=text;
+  document.getElementById('quote-attr-el').textContent=attr;
+  await dbSet('quote',{text,attr});
+  showOk();
+}
+
+async function savePost(){
   const t=document.getElementById('ep-title').value.trim(), b=document.getElementById('ep-body').value.trim();
   if(!t||!b) return;
   posts.unshift({cat:document.getElementById('ep-cat').value,title:t,body:b,attr:document.getElementById('ep-attr').value,files:[...pendingFiles],date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
+  await dbSet('posts',posts);
   renderPosts(); showOk();
 }
-function updatePost(i){
+async function updatePost(i){
   posts[i]={...posts[i],cat:document.getElementById('ep-cat').value,title:document.getElementById('ep-title').value,body:document.getElementById('ep-body').value,attr:document.getElementById('ep-attr').value,files:[...pendingFiles]};
+  await dbSet('posts',posts);
   renderPosts(); showOk();
 }
-function deletePost(i){if(confirm('Delete this writing?')){posts.splice(i,1);renderPosts();}}
+async function deletePost(i){if(confirm('Delete this writing?')){posts.splice(i,1);await dbSet('posts',posts);renderPosts();}}
 
-function saveBlogPost(){
+async function saveBlogPost(){
   const t=document.getElementById('ep-title').value.trim(), b=document.getElementById('ep-body').value.trim();
   if(!t||!b) return;
   blogPosts.unshift({cat:document.getElementById('ep-cat').value,title:t,body:b,author:document.getElementById('ep-author').value,files:[...pendingFiles],date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
+  await dbSet('blogPosts',blogPosts);
   renderBlog(); showOk();
 }
-function updateBlogPost(i){
+async function updateBlogPost(i){
   blogPosts[i]={...blogPosts[i],cat:document.getElementById('ep-cat').value,title:document.getElementById('ep-title').value,body:document.getElementById('ep-body').value,author:document.getElementById('ep-author').value,files:[...pendingFiles]};
+  await dbSet('blogPosts',blogPosts);
   renderBlog(); showOk();
 }
-function deleteBlogPost(i){if(confirm('Delete this post?')){blogPosts.splice(i,1);renderBlog();}}
+async function deleteBlogPost(i){if(confirm('Delete this post?')){blogPosts.splice(i,1);await dbSet('blogPosts',blogPosts);renderBlog();}}
 
-function saveShaykh(i){
+async function saveShaykh(i){
   shayukhData[i]={...shayukhData[i],known:document.getElementById('ep-known').value,ar:document.getElementById('ep-ar').value,en:document.getElementById('ep-en').value,radi:document.getElementById('ep-radi').value,bio:document.getElementById('ep-bio').value,files:[...pendingFiles]};
+  await dbSet('shayukh',shayukhData);
   renderShayukh(); showOk();
 }
 
-function addGalleryItem(){
+async function addGalleryItem(){
   const name=document.getElementById('ep-gname').value.trim(), sub=document.getElementById('ep-gsub').value.trim(), src=document.getElementById('ep-gsrc').value.trim();
   if(!name) return;
   galleryItems.push({id:'g'+Date.now(),name,sub,src,files:[...pendingFiles],placeholder:!src});
+  await dbSet('gallery',galleryItems);
   renderGallery(); showOk();
 }
-function saveGalleryImg(id){
+async function saveGalleryImg(id){
   const g=galleryItems.find(x=>x.id===id); if(!g) return;
   g.name=document.getElementById('ep-gname').value;
   g.sub=document.getElementById('ep-gsub').value;
   g.src=document.getElementById('ep-gsrc').value.trim();
   g.placeholder=!g.src;
   g.files=[...pendingFiles];
+  await dbSet('gallery',galleryItems);
   renderGallery(); showOk();
 }
-function deleteGallery(id){if(confirm('Remove photo?')){galleryItems=galleryItems.filter(x=>x.id!==id);renderGallery();}}
+async function deleteGallery(id){if(confirm('Remove photo?')){galleryItems=galleryItems.filter(x=>x.id!==id);await dbSet('gallery',galleryItems);renderGallery();}}
 
-function submitComment(){
+async function submitComment(){
   const name=document.getElementById('c-name').value.trim(), loc=document.getElementById('c-loc').value.trim(), text=document.getElementById('c-msg').value.trim();
   if(!name||!text) return;
   comments.unshift({name,loc,text,initials:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
+  await dbSet('comments',comments);
   document.getElementById('c-name').value=''; document.getElementById('c-loc').value=''; document.getElementById('c-msg').value='';
   renderComments();
 }
-function deleteComment(i){if(confirm('Delete?')){comments.splice(i,1);renderComments();}}
+async function deleteComment(i){if(confirm('Delete?')){comments.splice(i,1);await dbSet('comments',comments);renderComments();}}
 
 function openLightbox(id){const g=galleryItems.find(x=>x.id===id);if(!g||!g.src)return;document.getElementById('lb-img').src=g.src;document.getElementById('lb-name').textContent=g.name;document.getElementById('lb-sub').textContent=g.sub;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
@@ -1279,8 +1323,26 @@ function closeOverlay(id){document.getElementById(id).classList.remove('open');}
 function closeOverlayOut(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 
 function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderComments();}
-renderAll();
-setTimeout(onScroll,100);
+
+// ── LOAD FROM SUPABASE ON START ──
+async function loadFromDB() {
+  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedComments] = await Promise.all([
+    dbGet('quote'), dbGet('shayukh'), dbGet('gallery'),
+    dbGet('posts'), dbGet('blogPosts'), dbGet('comments')
+  ]);
+  if (quote) {
+    document.getElementById('quote-text-el').textContent = quote.text;
+    document.getElementById('quote-attr-el').textContent = quote.attr;
+  }
+  if (savedShayukh) shayukhData = savedShayukh;
+  if (savedGallery) galleryItems = savedGallery;
+  if (savedPosts) posts = savedPosts;
+  if (savedBlog) blogPosts = savedBlog;
+  if (savedComments) comments = savedComments;
+  renderAll();
+  setTimeout(onScroll, 100);
+}
+loadFromDB();
 </script>
 </body>
 </html>
