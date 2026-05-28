@@ -1459,6 +1459,7 @@ function openEditPanel(type, idx) {
 
     <button class="pub-btn" onclick="savePageText()">Save All Text ✦</button><div class="ok" id="ep-ok">Saved ✦</div>`;
   }
+  if (type === 'audio') {
     document.getElementById('edit-panel-content').innerHTML = `
       <h2>Replace Audio</h2>
       <p class="hint" style="margin-bottom:16px">Upload an MP3 to replace the player audio. Large files (50MB+) are supported.</p>
