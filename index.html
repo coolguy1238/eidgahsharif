@@ -1268,10 +1268,15 @@ function renderBooks() {
   onScroll();
 }
 
+function ensureReplies(c) {
+  if (!Array.isArray(c.replies)) c.replies = [];
+  c.replies.forEach(ensureReplies);
+}
 function renderComments() {
   const list = document.getElementById('comment-list');
   const noMsg = document.getElementById('no-comments-msg');
   if (!comments.length) { list.innerHTML=''; list.appendChild(noMsg); noMsg.style.display='block'; return; }
+  comments.forEach(ensureReplies);
   noMsg.style.display='none';
   list.innerHTML = comments.map((c,i) => renderComment(c, [i], 0)).join('');
 }
@@ -1755,7 +1760,7 @@ async function deleteGallery(id){if(confirm('Remove photo?')){galleryItems=galle
 async function submitComment(){
   const name=document.getElementById('c-name').value.trim(), loc=document.getElementById('c-loc').value.trim(), text=document.getElementById('c-msg').value.trim();
   if(!name||!text) return;
-  comments.unshift({name,loc,text,initials:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
+  comments.unshift({name,loc,text,initials:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),replies:[]});
   await dbSet('comments',comments);
   document.getElementById('c-name').value=''; document.getElementById('c-loc').value=''; document.getElementById('c-msg').value='';
   renderComments();
