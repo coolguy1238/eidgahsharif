@@ -372,9 +372,9 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   <div class="nav-links">
     <a href="#" onclick="showPage('home');return false;" class="active" data-page="home">Home</a>
     <a href="#" onclick="showPage('shajra');return false;" data-page="shajra">Shajra</a>
-    <a href="#" onclick="showPage('writings');return false;" data-page="writings">Writings</a>
-    <a href="#" onclick="showPage('blog');return false;" data-page="blog">Blog</a>
-    <a href="#" onclick="showPage('community');return false;" data-page="community">Community</a>
+    <a href="#" onclick="showPage('writings');return false;" data-page="writings">Biographies</a>
+    <a href="#" onclick="showPage('blog');return false;" data-page="blog">Posts</a>
+    <a href="#" onclick="showPage('books');return false;" data-page="books">Books</a>
   </div>
   <div class="nav-admin-area">
     <button class="btn-sm" id="admin-nav-btn" onclick="openLoginPanel()">✦ <span>Admin</span></button>
@@ -392,9 +392,9 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   </svg>
   <a href="#" onclick="showPage('home');closeDrawer();return false;" data-page="home">Home</a>
   <a href="#" onclick="showPage('shajra');closeDrawer();return false;" data-page="shajra">Shajra</a>
-  <a href="#" onclick="showPage('writings');closeDrawer();return false;" data-page="writings">Writings</a>
-  <a href="#" onclick="showPage('blog');closeDrawer();return false;" data-page="blog">Blog</a>
-  <a href="#" onclick="showPage('community');closeDrawer();return false;" data-page="community">Community</a>
+  <a href="#" onclick="showPage('writings');closeDrawer();return false;" data-page="writings">Biographies</a>
+  <a href="#" onclick="showPage('blog');closeDrawer();return false;" data-page="blog">Posts</a>
+  <a href="#" onclick="showPage('books');closeDrawer();return false;" data-page="books">Books</a>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -469,8 +469,9 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   </p>
   <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center" class="reveal">
     <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('shajra')">Shajra-e-Mubārak ✦</button>
-    <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('writings')">Writings ✦</button>
-    <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('blog')">Blog ✦</button>
+    <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('writings')">Biographies ✦</button>
+    <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('blog')">Posts ✦</button>
+    <button class="btn-sm" style="font-size:9px;padding:12px 22px" onclick="showPage('books')">Books ✦</button>
   </div>
 </div>
 
@@ -496,6 +497,31 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   <div style="margin-top:28px;text-align:center;display:none" id="gallery-add-row">
     <button class="btn-sm" onclick="openEditPanel('gallery')">+ Add Photo / File</button>
   </div>
+</div>
+
+<!-- Community section embedded on home page -->
+<hr class="divider">
+<div class="parallax-section">
+<div class="parallax-bg"></div>
+<div class="section" id="home-community">
+  <span class="sec-label reveal">The Community</span>
+  <div class="sec-title reveal">Leave Your Salām</div>
+  <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
+  <div style="max-width:680px;margin:0 auto">
+    <div class="comment-form reveal">
+      <h3>Share a reflection or send salām to the Darbar</h3>
+      <div class="form-row">
+        <div class="fg"><label>Your Name</label><input type="text" id="c-name" placeholder="Your name" autocomplete="given-name"></div>
+        <div class="fg"><label>Location (optional)</label><input type="text" id="c-loc" placeholder="City, Country" autocomplete="country-name"></div>
+      </div>
+      <div class="fg"><label>Message</label><textarea id="c-msg" placeholder="Your reflection, salām, or question..."></textarea></div>
+      <button class="sub-btn" onclick="submitComment()">Post to the Darbar ✦</button>
+    </div>
+    <div class="comment-list" id="comment-list">
+      <div class="no-comments" id="no-comments-msg">No messages yet — be the first to send your salām.</div>
+    </div>
+  </div>
+</div>
 </div>
 
 <footer>
@@ -543,15 +569,15 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 
 
 <!-- ══════════════════════════════════════
-     PAGE: WRITINGS
+     PAGE: BIOGRAPHIES
 ═══════════════════════════════════════ -->
 <div id="page-writings" class="page">
 <div class="section" style="padding-top:100px">
   <span class="sec-label reveal">From the Darbar</span>
-  <div class="sec-title reveal">Sayings, Biographies & Teachings</div>
+  <div class="sec-title reveal">Biographies of the Shayukh</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
   <div style="margin-bottom:26px;text-align:center;display:none" id="add-post-row">
-    <button class="btn-sm" onclick="openEditPanel('post')">+ Publish New Writing</button>
+    <button class="btn-sm" onclick="openEditPanel('post')">+ Publish New Biography</button>
   </div>
   <div class="posts-grid" id="posts-grid"></div>
 </div>
@@ -563,15 +589,15 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 </div>
 
 <!-- ══════════════════════════════════════
-     PAGE: BLOG
+     PAGE: POSTS
 ═══════════════════════════════════════ -->
 <div id="page-blog" class="page">
 <div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">Posts & Reflections</span>
-  <div class="sec-title reveal">Blog</div>
+  <span class="sec-label reveal">From Eidgah Sharif</span>
+  <div class="sec-title reveal">Posts</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
   <div style="margin-bottom:26px;text-align:center;display:none" id="add-blog-row">
-    <button class="btn-sm" onclick="openEditPanel('blog')">+ New Blog Post</button>
+    <button class="btn-sm" onclick="openEditPanel('blog')">+ New Post</button>
   </div>
   <div class="posts-grid" id="blog-grid"></div>
 </div>
@@ -583,30 +609,20 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 </div>
 
 <!-- ══════════════════════════════════════
-     PAGE: COMMUNITY
+     PAGE: BOOKS
 ═══════════════════════════════════════ -->
-<div id="page-community" class="page">
-<div class="parallax-section">
-<div class="parallax-bg"></div>
+<div id="page-books" class="page">
 <div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">The Community</span>
-  <div class="sec-title reveal">Leave Your Salām</div>
+  <span class="sec-label reveal">The Library</span>
+  <div class="sec-title reveal">Books & Texts</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <div style="max-width:680px;margin:0 auto">
-    <div class="comment-form reveal">
-      <h3>Share a reflection or send salām to the Darbar</h3>
-      <div class="form-row">
-        <div class="fg"><label>Your Name</label><input type="text" id="c-name" placeholder="Your name" autocomplete="given-name"></div>
-        <div class="fg"><label>Location (optional)</label><input type="text" id="c-loc" placeholder="City, Country" autocomplete="country-name"></div>
-      </div>
-      <div class="fg"><label>Message</label><textarea id="c-msg" placeholder="Your reflection, salām, or question..."></textarea></div>
-      <button class="sub-btn" onclick="submitComment()">Post to the Darbar ✦</button>
-    </div>
-    <div class="comment-list" id="comment-list">
-      <div class="no-comments" id="no-comments-msg">No messages yet — be the first to send your salām.</div>
-    </div>
+  <p class="reveal" style="font-family:'Amiri',serif;font-size:17px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.9;font-style:italic">
+    A collection of blessed texts, books, and documents from the Darbar.
+  </p>
+  <div style="margin-bottom:26px;text-align:center;display:none" id="add-book-row">
+    <button class="btn-sm" onclick="openEditPanel('book')">+ Upload Book / PDF</button>
   </div>
-</div>
+  <div class="posts-grid" id="books-grid"></div>
 </div>
 <footer>
   <div class="orn" style="margin-bottom:20px"><div class="orn-line long"></div><div class="orn-d"></div><div class="orn-line long"></div></div>
@@ -764,6 +780,7 @@ const shajraData = [
 
 let posts = [];
 let blogPosts = [];
+let books = [];
 let comments = [];
 let galleryItems = [
   {id:'g1',name:"Bawajī Sāhib رَضِيَ اللهُ عَنْهُ",sub:"Ḥazrat Khwājā Ḥāfiz ʿAbd al-Karīm · 1848–1936",src:"",files:[],placeholder:true},
@@ -1031,7 +1048,7 @@ function renderPosts() {
 
 function renderBlog() {
   const grid = document.getElementById('blog-grid');
-  if (!blogPosts.length) { grid.innerHTML=`<p style="font-family:'Amiri',serif;font-size:16px;color:var(--muted);font-style:italic;grid-column:1/-1;text-align:center;padding:28px 0">No blog posts yet.</p>`; return; }
+  if (!blogPosts.length) { grid.innerHTML=`<p style="font-family:'Amiri',serif;font-size:16px;color:var(--muted);font-style:italic;grid-column:1/-1;text-align:center;padding:28px 0">No posts yet.</p>`; return; }
   grid.innerHTML = blogPosts.map((p,i) => `
   <div class="post-card reveal" style="transition-delay:${i*0.07}s">
     <div class="p-admin-btns">
@@ -1043,6 +1060,25 @@ function renderBlog() {
     <div class="p-body">${p.body}</div>
     ${p.files && p.files.length ? '<div class="p-files">' + p.files.map(f=>`<a class="p-file-link" href="${f.dataURL}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`).join('') + '</div>' : ''}
     <div class="p-meta"><span>${p.author||''}</span><span>${p.date}</span></div>
+  </div>`).join('');
+  onScroll();
+}
+
+function renderBooks() {
+  const grid = document.getElementById('books-grid');
+  if (!grid) return;
+  if (!books.length) { grid.innerHTML=`<p style="font-family:'Amiri',serif;font-size:16px;color:var(--muted);font-style:italic;grid-column:1/-1;text-align:center;padding:28px 0">No books uploaded yet.</p>`; return; }
+  grid.innerHTML = books.map((b,i) => `
+  <div class="post-card reveal" style="transition-delay:${i*0.07}s">
+    <div class="p-admin-btns">
+      <button class="del-btn" onclick="deleteBook(${i})">Del</button>
+    </div>
+    <div class="p-tag">📖 Book</div>
+    <div class="p-title">${b.title}</div>
+    ${b.author ? `<div class="p-body" style="margin-bottom:10px">${b.author}</div>` : ''}
+    ${b.desc ? `<div class="p-body">${b.desc}</div>` : ''}
+    ${b.file ? `<div class="p-files" style="margin-top:12px"><a class="p-file-link" href="${b.file.dataURL}" download="${b.file.name}" target="_blank">📄 ${b.file.name}</a></div>` : ''}
+    <div class="p-meta"><span>${b.date}</span></div>
   </div>`).join('');
   onScroll();
 }
@@ -1071,13 +1107,13 @@ function enterAdmin() {
   document.getElementById('pw-input').value=''; document.getElementById('pw-err').style.display='none';
   document.getElementById('exit-admin-btn').style.display=''; document.getElementById('admin-nav-btn').style.display='none';
   document.body.classList.add('admin-mode');
-  ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='block';});
+  ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row','add-book-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='block';});
   renderAll();
 }
 function exitAdmin() {
   adminMode=false; document.getElementById('exit-admin-btn').style.display='none'; document.getElementById('admin-nav-btn').style.display='';
   document.body.classList.remove('admin-mode');
-  ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row','add-book-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   renderAll();
 }
 
@@ -1209,8 +1245,22 @@ function openEditPanel(type, idx) {
     ${g.src?`<button class="pub-btn" style="background:rgba(220,80,80,0.2);border:1px solid rgba(220,80,80,0.4);color:#e07070;margin-top:8px" onclick="deleteGallery('${idx}');closeOverlay('edit-overlay')">Remove Photo</button>`:''}
     <div class="ok" id="ep-ok">Saved ✦</div>`;
     setTimeout(renderPendingFiles,50);
+  } else if (type === 'book') {
+    c.innerHTML = `<div class="admin-badge">Upload Book / PDF</div>
+    <div class="fg"><label>Title</label><input type="text" id="ep-btitle" placeholder="Book title..."></div>
+    <div class="fg"><label>Author (optional)</label><input type="text" id="ep-bauthor" placeholder="Author name..."></div>
+    <div class="fg"><label>Description (optional)</label><textarea id="ep-bdesc" style="height:70px" placeholder="Brief description..."></textarea></div>
+    <div class="fg">
+      <label>Upload PDF / File</label>
+      <label class="file-upload-label">
+        <input type="file" id="ep-bfile" accept="application/pdf,.doc,.docx" onchange="addPendingFiles(this)">
+        📄 Choose PDF or Document
+      </label>
+      <div class="attached-files-list" id="pending-files-list"></div>
+    </div>
+    <button class="pub-btn" onclick="saveBook()">Upload ✦</button><div class="ok" id="ep-ok">Uploaded ✦</div>`;
+
   }
-  document.getElementById('edit-overlay').classList.add('open');
 }
 
 function attachShaykhPhoto(input, idx) {
@@ -1317,18 +1367,32 @@ async function submitComment(){
 }
 async function deleteComment(i){if(confirm('Delete?')){comments.splice(i,1);await dbSet('comments',comments);renderComments();}}
 
+async function saveBook(){
+  const title=document.getElementById('ep-btitle').value.trim();
+  if(!title) return;
+  const fileInput=document.getElementById('ep-bfile');
+  const author=document.getElementById('ep-bauthor').value.trim();
+  const desc=document.getElementById('ep-bdesc').value.trim();
+  if(pendingFiles.length===0&&!fileInput.dataset.loaded){return;}
+  const file=pendingFiles[0]||null;
+  books.unshift({title,author,desc,file,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});
+  await dbSet('books',books);
+  renderBooks(); showOk();
+}
+async function deleteBook(i){if(confirm('Remove this book?')){books.splice(i,1);await dbSet('books',books);renderBooks();}}
+
 function openLightbox(id){const g=galleryItems.find(x=>x.id===id);if(!g||!g.src)return;document.getElementById('lb-img').src=g.src;document.getElementById('lb-name').textContent=g.name;document.getElementById('lb-sub').textContent=g.sub;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 function closeOverlay(id){document.getElementById(id).classList.remove('open');}
 function closeOverlayOut(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 
-function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderComments();}
+function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderBooks();renderComments();}
 
 // ── LOAD FROM SUPABASE ON START ──
 async function loadFromDB() {
-  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedComments] = await Promise.all([
+  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments] = await Promise.all([
     dbGet('quote'), dbGet('shayukh'), dbGet('gallery'),
-    dbGet('posts'), dbGet('blogPosts'), dbGet('comments')
+    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments')
   ]);
   if (quote) {
     document.getElementById('quote-text-el').textContent = quote.text;
@@ -1338,6 +1402,7 @@ async function loadFromDB() {
   if (savedGallery) galleryItems = savedGallery;
   if (savedPosts) posts = savedPosts;
   if (savedBlog) blogPosts = savedBlog;
+  if (savedBooks) books = savedBooks;
   if (savedComments) comments = savedComments;
   renderAll();
   setTimeout(onScroll, 100);
