@@ -890,13 +890,19 @@ function renderFileTags(files) {
   ).join('') + '</div>';
 }
 
+function isImageFile(f) {
+  if (f.type && f.type.startsWith('image/')) return true;
+  const ext = (f.name || '').split('.').pop().toLowerCase();
+  return ['jpg','jpeg','png','gif','webp','avif','svg','bmp','tiff','heic','heif'].includes(ext);
+}
+
 function renderFileAttachments(files) {
   if (!files || !files.length) return '';
   const items = files.map(f => {
-    if (f.type && f.type.startsWith('image/')) {
+    if (isImageFile(f)) {
       return `<a href="${f.url}" target="_blank"><img class="p-img-attachment" src="${f.url}" alt="${f.name}" loading="lazy"></a>`;
     }
-    return `<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type)} ${f.name}</a>`;
+    return `<a class="p-file-link" href="${f.url}" download="${f.name}" target="_blank">${fileIcon(f.type||'')} ${f.name}</a>`;
   }).join('');
   return `<div class="p-files">${items}</div>`;
 }
