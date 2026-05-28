@@ -1118,6 +1118,8 @@ function exitAdmin() {
 }
 
 // ── EDIT PANEL ──
+function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function openEditPanel(type, idx) {
   pendingFiles = [];
   const c = document.getElementById('edit-panel-content');
@@ -1135,8 +1137,8 @@ function openEditPanel(type, idx) {
     const qt = document.getElementById('quote-text-el').textContent.replace(/^[\u201C"]/,'').replace(/[\u201D"]$/,'');
     const qa = document.getElementById('quote-attr-el').textContent.replace(/^— /,'');
     c.innerHTML = `<div class="admin-badge">Featured Quote</div>
-    <div class="fg"><label>Quote Text</label><textarea id="ep-qt" style="height:80px">${qt}</textarea></div>
-    <div class="fg"><label>Attribution</label><input type="text" id="ep-qa" value="${qa}"></div>
+    <div class="fg"><label>Quote Text</label><textarea id="ep-qt" style="height:80px">${esc(qt)}</textarea></div>
+    <div class="fg"><label>Attribution</label><input type="text" id="ep-qa" value="${esc(qa)}"></div>
     <button class="pub-btn" onclick="saveQuote()">Save ✦</button><div class="ok" id="ep-ok">Saved ✦</div>`;
 
   } else if (type === 'post') {
@@ -1152,10 +1154,10 @@ function openEditPanel(type, idx) {
     const p = posts[idx];
     pendingFiles = p.files ? [...p.files] : [];
     c.innerHTML = `<div class="admin-badge">Editing Writing</div>
-    <div class="fg"><label>Category</label><input type="text" id="ep-cat" value="${p.cat}"></div>
-    <div class="fg"><label>Title</label><input type="text" id="ep-title" value="${p.title}"></div>
-    <div class="fg"><label>Content</label><textarea id="ep-body" style="height:110px">${p.body}</textarea></div>
-    <div class="fg"><label>Attribution</label><input type="text" id="ep-attr" value="${p.attr}"></div>
+    <div class="fg"><label>Category</label><input type="text" id="ep-cat" value="${esc(p.cat)}"></div>
+    <div class="fg"><label>Title</label><input type="text" id="ep-title" value="${esc(p.title)}"></div>
+    <div class="fg"><label>Content</label><textarea id="ep-body" style="height:110px">${esc(p.body)}</textarea></div>
+    <div class="fg"><label>Attribution</label><input type="text" id="ep-attr" value="${esc(p.attr)}"></div>
     ${fileUploadHtml}
     <button class="pub-btn" onclick="updatePost(${idx})">Save ✦</button><div class="ok" id="ep-ok">Saved ✦</div>`;
     setTimeout(renderPendingFiles,50);
@@ -1172,11 +1174,11 @@ function openEditPanel(type, idx) {
   } else if (type === 'edit-blog') {
     const p = blogPosts[idx];
     pendingFiles = p.files ? [...p.files] : [];
-    c.innerHTML = `<div class="admin-badge">Editing Blog Post</div>
-    <div class="fg"><label>Tag / Label (optional)</label><input type="text" id="ep-cat" value="${p.cat||''}"></div>
-    <div class="fg"><label>Title</label><input type="text" id="ep-title" value="${p.title}"></div>
-    <div class="fg"><label>Content</label><textarea id="ep-body" style="height:130px">${p.body}</textarea></div>
-    <div class="fg"><label>Author</label><input type="text" id="ep-author" value="${p.author||''}"></div>
+    c.innerHTML = `<div class="admin-badge">Editing Post</div>
+    <div class="fg"><label>Tag / Label (optional)</label><input type="text" id="ep-cat" value="${esc(p.cat||'')}"></div>
+    <div class="fg"><label>Title</label><input type="text" id="ep-title" value="${esc(p.title)}"></div>
+    <div class="fg"><label>Content</label><textarea id="ep-body" style="height:130px">${esc(p.body)}</textarea></div>
+    <div class="fg"><label>Author</label><input type="text" id="ep-author" value="${esc(p.author||'')}"></div>
     ${fileUploadHtml}
     <button class="pub-btn" onclick="updateBlogPost(${idx})">Save ✦</button><div class="ok" id="ep-ok">Saved ✦</div>`;
     setTimeout(renderPendingFiles,50);
@@ -1185,11 +1187,11 @@ function openEditPanel(type, idx) {
     const s = shayukhData[idx];
     pendingFiles = s.files ? [...s.files] : [];
     c.innerHTML = `<div class="admin-badge">Editing Shaykh</div>
-    <div class="fg"><label>Known As</label><input type="text" id="ep-known" value="${s.known}"></div>
-    <div class="fg"><label>Arabic / Urdu Name</label><input type="text" id="ep-ar" value="${s.ar}" dir="rtl" style="font-size:18px;text-align:right"></div>
-    <div class="fg"><label>English Name</label><input type="text" id="ep-en" value="${s.en}"></div>
-    <div class="fg"><label>Dates / Radi</label><input type="text" id="ep-radi" value="${s.radi}"></div>
-    <div class="fg"><label>Biography</label><textarea id="ep-bio" style="height:80px">${s.bio}</textarea></div>
+    <div class="fg"><label>Known As</label><input type="text" id="ep-known" value="${esc(s.known)}"></div>
+    <div class="fg"><label>Arabic / Urdu Name</label><input type="text" id="ep-ar" value="${esc(s.ar)}" dir="rtl" style="font-size:18px;text-align:right"></div>
+    <div class="fg"><label>English Name</label><input type="text" id="ep-en" value="${esc(s.en)}"></div>
+    <div class="fg"><label>Dates / Radi</label><input type="text" id="ep-radi" value="${esc(s.radi)}"></div>
+    <div class="fg"><label>Biography</label><textarea id="ep-bio" style="height:80px">${esc(s.bio)}</textarea></div>
     <div class="fg">
       <label>Photo (upload)</label>
       <label class="file-upload-label">
@@ -1229,16 +1231,16 @@ function openEditPanel(type, idx) {
     const g = galleryItems.find(x => x.id === idx);
     pendingFiles = g.files ? [...g.files] : [];
     c.innerHTML = `<div class="admin-badge">Editing Frame</div>
-    <div class="fg"><label>Name</label><input type="text" id="ep-gname" value="${g.name}"></div>
-    <div class="fg"><label>Subtitle</label><input type="text" id="ep-gsub" value="${g.sub}"></div>
+    <div class="fg"><label>Name</label><input type="text" id="ep-gname" value="${esc(g.name)}"></div>
+    <div class="fg"><label>Subtitle</label><input type="text" id="ep-gsub" value="${esc(g.sub)}"></div>
     <div class="fg">
       <label>Photo</label>
       <label class="file-upload-label">
         <input type="file" accept="image/*" onchange="previewGalleryUpload(this)">
         🖼 Upload / Replace Photo
       </label>
-      <input type="text" id="ep-gsrc" value="${g.src}" placeholder="Or paste URL..." style="margin-top:6px">
-      <img id="ep-gpreview" src="${g.src||''}" style="max-width:100%;margin-top:8px;${g.src?'':'display:none;'}border:1px solid rgba(201,168,76,0.2)">
+      <input type="text" id="ep-gsrc" value="${esc(g.src)}" placeholder="Or paste URL..." style="margin-top:6px">
+      <img id="ep-gpreview" src="${esc(g.src||'')}" style="max-width:100%;margin-top:8px;${g.src?'':'display:none;'}border:1px solid rgba(201,168,76,0.2)">
     </div>
     ${fileUploadHtml}
     <button class="pub-btn" onclick="saveGalleryImg('${idx}')">Save ✦</button>
