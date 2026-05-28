@@ -397,6 +397,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
   </div>
   <div class="nav-admin-area">
     <button class="btn-sm" id="admin-nav-btn" onclick="openLoginPanel()">✦ <span>Admin</span></button>
+    <button class="btn-sm" id="edit-text-btn" style="display:none" onclick="openEditPanel('pagetext')">✎ Edit Text</button>
     <button class="btn-sm danger" id="exit-admin-btn" style="display:none" onclick="exitAdmin()">Exit</button>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -481,10 +482,10 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 
 <!-- Home intro -->
 <div class="section">
-  <span class="sec-label reveal">Welcome</span>
-  <div class="sec-title reveal">Darbar-e-Aaliyah Eidgah Sharif</div>
+  <span class="sec-label reveal" data-pt="welcomeLabel">Welcome</span>
+  <div class="sec-title reveal" data-pt="welcomeTitle">Darbar-e-Aaliyah Eidgah Sharif</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <p class="reveal" style="font-family:'Amiri',serif;font-size:17px;color:var(--muted);text-align:center;max-width:560px;margin:0 auto 40px;line-height:1.9;font-style:italic">
+  <p class="reveal" data-pt="welcomeBody" style="font-family:'Amiri',serif;font-size:17px;color:var(--muted);text-align:center;max-width:560px;margin:0 auto 40px;line-height:1.9;font-style:italic">
     A blessed sanctuary of the Naqshbandī path in Rawalpindi, founded in 1848 by Ḥazrat Bawajī Sāhib رَضِيَ اللهُ عَنْهُ. Explore the lineage, the chain of transmission, and the writings of the Shayukh.
   </p>
   <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center" class="reveal">
@@ -499,8 +500,8 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 
 <!-- Shayukh section embedded on home page -->
 <div class="section" id="home-shayukh">
-  <span class="sec-label reveal">The Custodians of the Darbar</span>
-  <div class="sec-title reveal">Shayukh of Eidgah Sharif</div>
+  <span class="sec-label reveal" data-pt="shayukhLabel">The Custodians of the Darbar</span>
+  <div class="sec-title reveal" data-pt="shayukhTitle">Shayukh of Eidgah Sharif</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
   <div class="chain" id="shayukh-chain"></div>
 </div>
@@ -509,10 +510,10 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 
 <!-- Gallery section embedded on home page -->
 <div class="section" id="home-gallery">
-  <span class="sec-label reveal">The Blessed Faces</span>
-  <div class="sec-title reveal">Gallery of the Shayukh</div>
+  <span class="sec-label reveal" data-pt="galleryLabel">The Blessed Faces</span>
+  <div class="sec-title reveal" data-pt="galleryTitle">Gallery of the Shayukh</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <p class="gallery-intro reveal">These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.</p>
+  <p class="gallery-intro reveal" data-pt="galleryIntro">These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.</p>
   <div class="gallery-grid reveal-scale" id="gallery-grid"></div>
   <div style="margin-top:28px;text-align:center;display:none" id="gallery-add-row">
     <button class="btn-sm" onclick="openEditPanel('gallery')">+ Add Photo / File</button>
@@ -524,12 +525,12 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 <div class="parallax-section">
 <div class="parallax-bg"></div>
 <div class="section" id="home-community">
-  <span class="sec-label reveal">The Community</span>
-  <div class="sec-title reveal">Leave Your Salām</div>
+  <span class="sec-label reveal" data-pt="communityLabel">The Community</span>
+  <div class="sec-title reveal" data-pt="communityTitle">Leave Your Salām</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
   <div style="max-width:680px;margin:0 auto">
     <div class="comment-form reveal">
-      <h3>Share a reflection or send salām to the Darbar</h3>
+      <h3 data-pt="communityForm">Share a reflection or send salām to the Darbar</h3>
       <div class="form-row">
         <div class="fg"><label>Your Name</label><input type="text" id="c-name" placeholder="Your name" autocomplete="given-name"></div>
         <div class="fg"><label>Location (optional)</label><input type="text" id="c-loc" placeholder="City, Country" autocomplete="country-name"></div>
@@ -538,7 +539,7 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
       <button class="sub-btn" onclick="submitComment()">Post to the Darbar ✦</button>
     </div>
     <div class="comment-list" id="comment-list">
-      <div class="no-comments" id="no-comments-msg">No messages yet — be the first to send your salām.</div>
+      <div class="no-comments" id="no-comments-msg" data-pt="noComments">No messages yet — be the first to send your salām.</div>
     </div>
   </div>
 </div>
@@ -563,10 +564,10 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 <div class="parallax-bg"></div>
 <div class="wide">
 <div class="section" style="padding-top:100px;padding-bottom:0">
-  <span class="sec-label reveal">The Blessed Chain of Transmission</span>
-  <div class="sec-title reveal">Shajra-e-Mubārak</div>
+  <span class="sec-label reveal" data-pt="shajraLabel">The Blessed Chain of Transmission</span>
+  <div class="sec-title reveal" data-pt="shajraTitle">Shajra-e-Mubārak</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <p class="reveal" style="font-family:'Amiri',serif;font-size:16px;color:var(--muted);text-align:center;margin-bottom:36px;font-style:italic;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.8">
+  <p class="reveal" data-pt="shajraBody" style="font-family:'Amiri',serif;font-size:16px;color:var(--muted);text-align:center;margin-bottom:36px;font-style:italic;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.8">
     The unbroken chain of spiritual transmission from the Seal of Prophets ﷺ to the present custodians of Eidgah Sharif — through the Naqshbandī silsila.
   </p>
 </div>
@@ -593,8 +594,8 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 ═══════════════════════════════════════ -->
 <div id="page-writings" class="page">
 <div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">From the Darbar</span>
-  <div class="sec-title reveal">Biographies of the Shayukh</div>
+  <span class="sec-label reveal" data-pt="biosLabel">From the Darbar</span>
+  <div class="sec-title reveal" data-pt="biosTitle">Biographies of the Shayukh</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
   <div style="margin-bottom:26px;text-align:center;display:none" id="add-post-row">
     <button class="btn-sm" onclick="openEditPanel('post')">+ Publish New Biography</button>
@@ -613,8 +614,8 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 ═══════════════════════════════════════ -->
 <div id="page-blog" class="page">
 <div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">From Eidgah Sharif</span>
-  <div class="sec-title reveal">Posts</div>
+  <span class="sec-label reveal" data-pt="postsLabel">From Eidgah Sharif</span>
+  <div class="sec-title reveal" data-pt="postsTitle">Posts</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
   <div style="margin-bottom:26px;text-align:center;display:none" id="add-blog-row">
     <button class="btn-sm" onclick="openEditPanel('blog')">+ New Post</button>
@@ -633,10 +634,10 @@ footer{text-align:center;padding:56px 24px;padding-bottom:calc(56px + var(--safe
 ═══════════════════════════════════════ -->
 <div id="page-books" class="page">
 <div class="section" style="padding-top:100px">
-  <span class="sec-label reveal">The Library</span>
-  <div class="sec-title reveal">Books & Texts</div>
+  <span class="sec-label reveal" data-pt="booksLabel">The Library</span>
+  <div class="sec-title reveal" data-pt="booksTitle">Books & Texts</div>
   <div class="sec-rule reveal"><div class="rl"></div><div class="dot"></div><div class="rr"></div></div>
-  <p class="reveal" style="font-family:'Amiri',serif;font-size:17px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.9;font-style:italic">
+  <p class="reveal" data-pt="booksIntro" style="font-family:'Amiri',serif;font-size:17px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.9;font-style:italic">
     A collection of blessed texts, books, and documents from the Darbar.
   </p>
   <div style="margin-bottom:26px;text-align:center;display:none" id="add-book-row">
@@ -1239,12 +1240,13 @@ function enterAdmin() {
   adminMode=true; closeOverlay('login-overlay');
   document.getElementById('pw-input').value=''; document.getElementById('pw-err').style.display='none';
   document.getElementById('exit-admin-btn').style.display=''; document.getElementById('admin-nav-btn').style.display='none';
+  document.getElementById('edit-text-btn').style.display='';
   document.body.classList.add('admin-mode');
   ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row','add-book-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='block';});
   renderAll();
 }
 function exitAdmin() {
-  adminMode=false; document.getElementById('exit-admin-btn').style.display='none'; document.getElementById('admin-nav-btn').style.display='';
+  adminMode=false; document.getElementById('exit-admin-btn').style.display='none'; document.getElementById('admin-nav-btn').style.display=''; document.getElementById('edit-text-btn').style.display='none';
   document.body.classList.remove('admin-mode');
   ['quote-edit-row','gallery-add-row','add-post-row','add-blog-row','add-book-row'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   renderAll();
@@ -1395,8 +1397,68 @@ function openEditPanel(type, idx) {
     </div>
     <button class="pub-btn" onclick="saveBook()">Upload ✦</button><div class="ok" id="ep-ok">Uploaded ✦</div>`;
 
+  } else if (type === 'pagetext') {
+    const t = siteText;
+    c.innerHTML = `<div class="admin-badge">Edit All Page Text</div>
+    <p class="hint">Every label, heading and paragraph on the site. Save when done.</p>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Hero Section</p>
+    <div class="fg"><label>Bismillah line</label><input type="text" id="pt-bismillah" value="${esc(t.bismillah)}"></div>
+    <div class="fg"><label>Hero Arabic title</label><input type="text" id="pt-heroAr" value="${esc(t.heroAr)}" dir="rtl" style="text-align:right;font-size:18px"></div>
+    <div class="fg"><label>Hero English title</label><input type="text" id="pt-heroEn" value="${esc(t.heroEn)}"></div>
+    <div class="fg"><label>Hero subtitle line</label><input type="text" id="pt-heroSub" value="${esc(t.heroSub)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Home — Welcome Section</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-welcomeLabel" value="${esc(t.welcomeLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-welcomeTitle" value="${esc(t.welcomeTitle)}"></div>
+    <div class="fg"><label>Intro paragraph</label><textarea id="pt-welcomeBody" style="height:80px">${esc(t.welcomeBody)}</textarea></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Home — Shayukh Section</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-shayukhLabel" value="${esc(t.shayukhLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-shayukhTitle" value="${esc(t.shayukhTitle)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Home — Gallery Section</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-galleryLabel" value="${esc(t.galleryLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-galleryTitle" value="${esc(t.galleryTitle)}"></div>
+    <div class="fg"><label>Gallery intro text</label><textarea id="pt-galleryIntro" style="height:70px">${esc(t.galleryIntro)}</textarea></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Home — Community Section</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-communityLabel" value="${esc(t.communityLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-communityTitle" value="${esc(t.communityTitle)}"></div>
+    <div class="fg"><label>Form heading</label><input type="text" id="pt-communityForm" value="${esc(t.communityForm)}"></div>
+    <div class="fg"><label>Empty comments message</label><input type="text" id="pt-noComments" value="${esc(t.noComments)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Shajra Page</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-shajraLabel" value="${esc(t.shajraLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-shajraTitle" value="${esc(t.shajraTitle)}"></div>
+    <div class="fg"><label>Intro paragraph</label><textarea id="pt-shajraBody" style="height:70px">${esc(t.shajraBody)}</textarea></div>
+    <div class="fg"><label>Shajra header Arabic</label><input type="text" id="pt-shajraHeadAr" value="${esc(t.shajraHeadAr)}" dir="rtl" style="text-align:right;font-size:18px"></div>
+    <div class="fg"><label>Shajra header subtitle</label><input type="text" id="pt-shajraHeadSub" value="${esc(t.shajraHeadSub)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Biographies Page</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-biosLabel" value="${esc(t.biosLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-biosTitle" value="${esc(t.biosTitle)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Posts Page</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-postsLabel" value="${esc(t.postsLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-postsTitle" value="${esc(t.postsTitle)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Books Page</p>
+    <div class="fg"><label>Section label</label><input type="text" id="pt-booksLabel" value="${esc(t.booksLabel)}"></div>
+    <div class="fg"><label>Section title</label><input type="text" id="pt-booksTitle" value="${esc(t.booksTitle)}"></div>
+    <div class="fg"><label>Books intro paragraph</label><textarea id="pt-booksIntro" style="height:70px">${esc(t.booksIntro)}</textarea></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Audio Player</p>
+    <div class="fg"><label>Player title line</label><input type="text" id="pt-audioTitle" value="${esc(t.audioTitle)}"></div>
+    <div class="fg"><label>Player subtitle line</label><input type="text" id="pt-audioSub" value="${esc(t.audioSub)}"></div>
+
+    <p style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:14px 0 6px">Footer</p>
+    <div class="fg"><label>Footer Arabic logo</label><input type="text" id="pt-footerAr" value="${esc(t.footerAr)}" dir="rtl" style="text-align:right;font-size:18px"></div>
+    <div class="fg"><label>Footer English name</label><input type="text" id="pt-footerEn" value="${esc(t.footerEn)}"></div>
+    <div class="fg"><label>Footer address / details</label><textarea id="pt-footerText" style="height:80px">${esc(t.footerText)}</textarea></div>
+
+    <button class="pub-btn" onclick="savePageText()">Save All Text ✦</button><div class="ok" id="ep-ok">Saved ✦</div>`;
   }
-  if (type === 'audio') {
     document.getElementById('edit-panel-content').innerHTML = `
       <h2>Replace Audio</h2>
       <p class="hint" style="margin-bottom:16px">Upload an MP3 to replace the player audio. Large files (50MB+) are supported.</p>
@@ -1567,18 +1629,99 @@ async function handleAudioUpload(input) {
   }
 }
 
+// ── STATIC PAGE TEXT ──
+const defaultSiteText = {
+  bismillah: 'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',
+  heroAr: 'دربارِ عالیہ ایدگاہ شریف',
+  heroEn: 'Darbar-e-Aaliyah Eidgah Sharif',
+  heroSub: 'Rawalpindi, Pakistan \u00a0·\u00a0 Silsila-e-Naqshbandiyya \u00a0·\u00a0 Est. 1848',
+  welcomeLabel: 'Welcome',
+  welcomeTitle: 'Darbar-e-Aaliyah Eidgah Sharif',
+  welcomeBody: 'A blessed sanctuary of the Naqshbandī path in Rawalpindi, founded in 1848 by Ḥazrat Bawajī Sāhib رَضِيَ اللهُ عَنْهُ. Explore the lineage, the chain of transmission, and the writings of the Shayukh.',
+  shayukhLabel: 'The Custodians of the Darbar',
+  shayukhTitle: 'Shayukh of Eidgah Sharif',
+  galleryLabel: 'The Blessed Faces',
+  galleryTitle: 'Gallery of the Shayukh',
+  galleryIntro: 'These frames await the rare and blessed photographs of the Shayukh of Eidgah Sharif. When added, they will appear here — preserved with the honour they deserve.',
+  communityLabel: 'The Community',
+  communityTitle: 'Leave Your Salām',
+  communityForm: 'Share a reflection or send salām to the Darbar',
+  noComments: 'No messages yet — be the first to send your salām.',
+  shajraLabel: 'The Blessed Chain of Transmission',
+  shajraTitle: 'Shajra-e-Mubārak',
+  shajraBody: 'The unbroken chain of spiritual transmission from the Seal of Prophets ﷺ to the present custodians of Eidgah Sharif — through the Naqshbandī silsila.',
+  shajraHeadAr: 'سِلسِلَۂ عَالِیَہ نَقشبندِیَّہ',
+  shajraHeadSub: 'Silsila-e-Aaliyah Naqshbandiyya · Darbar-e-Aaliyah Eidgah Sharif',
+  biosLabel: 'From the Darbar',
+  biosTitle: 'Biographies of the Shayukh',
+  postsLabel: 'From Eidgah Sharif',
+  postsTitle: 'Posts',
+  booksLabel: 'The Library',
+  booksTitle: 'Books & Texts',
+  booksIntro: 'A collection of blessed texts, books, and documents from the Darbar.',
+  audioTitle: 'Lasānī Pāk رَضِيَ اللهُ عَنْهُ',
+  audioSub: 'Bayān · Eidgah Sharif',
+  footerAr: 'دربارِ عالیہ ایدگاہ شریف',
+  footerEn: 'Darbar-e-Aaliyah Eidgah Sharif',
+  footerText: 'Asghar Mall Road · Rawalpindi · Pakistan\nSilsila-e-Aaliyah Naqshbandiyya · Est. 1848\n\nصَلَّى اللهُ عَلَيْهِ وَسَلَّم \u00a0·\u00a0 رَضِيَ اللهُ عَنْهُمْ أَجْمَعِيْن'
+};
+let siteText = {...defaultSiteText};
+
+function applyPageText(t) {
+  // Hero
+  const bism = document.querySelector('.bismillah'); if(bism) bism.textContent = t.bismillah;
+  const heroAr = document.querySelector('.hero-ar'); if(heroAr) heroAr.textContent = t.heroAr;
+  const heroEn = document.querySelector('.hero-en'); if(heroEn) heroEn.textContent = t.heroEn;
+  const heroSub = document.querySelector('.hero-sub'); if(heroSub) heroSub.textContent = t.heroSub;
+  // Welcome
+  document.querySelectorAll('[data-pt]').forEach(el => {
+    const k = el.getAttribute('data-pt');
+    if (t[k] !== undefined) {
+      if (el.tagName === 'P' || el.tagName === 'DIV') el.innerHTML = t[k].replace(/\n/g,'<br>');
+      else el.textContent = t[k];
+    }
+  });
+  // Audio player
+  const at = document.querySelector('.audio-title'); if(at) at.textContent = t.audioTitle;
+  const as = document.querySelector('.audio-subtitle'); if(as) as.textContent = t.audioSub;
+  // Footer (all footers)
+  document.querySelectorAll('.f-logo').forEach(el => el.textContent = t.footerAr);
+  document.querySelectorAll('.f-ar').forEach(el => el.textContent = t.footerEn);
+  document.querySelectorAll('.f-text').forEach(el => el.innerHTML = t.footerText.replace(/\n/g,'<br>'));
+  // Shajra header
+  const shHead = document.querySelector('.shajra-head p'); if(shHead) shHead.textContent = t.shajraHeadAr;
+  const shSub = document.querySelector('.shajra-head small'); if(shSub) shSub.textContent = t.shajraHeadSub;
+}
+
+async function savePageText() {
+  const fields = ['bismillah','heroAr','heroEn','heroSub','welcomeLabel','welcomeTitle','welcomeBody',
+    'shayukhLabel','shayukhTitle','galleryLabel','galleryTitle','galleryIntro',
+    'communityLabel','communityTitle','communityForm','noComments',
+    'shajraLabel','shajraTitle','shajraBody','shajraHeadAr','shajraHeadSub',
+    'biosLabel','biosTitle','postsLabel','postsTitle','booksLabel','booksTitle','booksIntro',
+    'audioTitle','audioSub','footerAr','footerEn','footerText'];
+  fields.forEach(k => {
+    const el = document.getElementById('pt-'+k);
+    if (el) siteText[k] = el.value;
+  });
+  await dbSet('siteText', siteText);
+  applyPageText(siteText);
+  showOk();
+}
+
 function renderAll(){renderShayukh();renderShajra();renderGallery();renderPosts();renderBlog();renderBooks();renderComments();}
 
 // ── LOAD FROM SUPABASE ON START ──
 async function loadFromDB() {
-  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments, savedAudio] = await Promise.all([
+  const [quote, savedShayukh, savedGallery, savedPosts, savedBlog, savedBooks, savedComments, savedAudio, savedSiteText] = await Promise.all([
     dbGet('quote'), dbGet('shayukh'), dbGet('gallery'),
-    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments'), dbGet('audioSrc')
+    dbGet('posts'), dbGet('blogPosts'), dbGet('books'), dbGet('comments'), dbGet('audioSrc'), dbGet('siteText')
   ]);
   if (quote) {
     document.getElementById('quote-text-el').textContent = quote.text;
     document.getElementById('quote-attr-el').textContent = quote.attr;
   }
+  if (savedSiteText) { siteText = {...defaultSiteText, ...savedSiteText}; applyPageText(siteText); }
   if (savedShayukh) shayukhData = savedShayukh;
   if (savedGallery) galleryItems = savedGallery;
   if (savedPosts) posts = savedPosts;
