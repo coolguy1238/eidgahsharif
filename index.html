@@ -1367,7 +1367,7 @@ function openEditPanel(type, idx) {
       <p class="hint" style="margin-bottom:16px">Upload an MP3 to replace the player audio. Large files (50MB+) are supported.</p>
       <div class="fg">
         <label>Audio File (MP3)
-          <input type="file" accept="audio/*" id="audio-file-input" onchange="handleAudioUpload(this)">
+          <input type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg" id="audio-file-input" onchange="handleAudioUpload(this)">
         </label>
       </div>
       <div id="audio-upload-status" style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--gold);margin-top:12px;display:none"></div>
